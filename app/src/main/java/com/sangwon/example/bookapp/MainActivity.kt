@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val intent = Intent(this, BookInfo::class.java)
+        val intent = Intent(this, BookInfoActivity::class.java)
         intent.putExtra("name", "bookName")
         startActivity(intent)
     }
