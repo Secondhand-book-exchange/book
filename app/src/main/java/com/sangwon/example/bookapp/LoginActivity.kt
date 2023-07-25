@@ -7,7 +7,7 @@ import android.view.View
 import com.sangwon.example.bookapp.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
-    val binding = ActivityLoginBinding.inflate(layoutInflater)
+    private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
