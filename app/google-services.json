@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "259051946836",
+    "project_id": "secondhandbook-d7a8f",
+    "storage_bucket": "secondhandbook-d7a8f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259051946836:android:79c878684ee90585607ec1",
+        "android_client_info": {
+          "package_name": "com.sangwon.example.bookapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259051946836-fgo6ijdks3m9ha9b7kt2qijnafuc2qn8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHxj4Aac2fEPijQ8f5ImeAd98gC1tjQTk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259051946836-fgo6ijdks3m9ha9b7kt2qijnafuc2qn8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
