@@ -5,20 +5,26 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.SpinnerAdapter
 import com.google.firebase.FirebaseApp
+import com.sangwon.example.bookapp.Adapter.MainBookListAdapter
+import com.sangwon.example.bookapp.Item.BookItem
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnItemClickListener {
     private val binding = ActivityMainBinding.inflate(layoutInflater)
+    private lateinit var adapter:MainBookListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         FirebaseApp.initializeApp(this)
 
+        adapter = MainBookListAdapter()
+        binding.bookList.adapter = adapter
+
         binding.searchBtn.setOnClickListener(this)
+        binding.registerBtn.setOnClickListener(this)
         binding.areaBtn.setOnClickListener(this)
-        binding.bookList.setOnItemClickListener(this)
+        binding.bookList.onItemClickListener = this
     }
 
     override fun onClick(v: View?) {
@@ -27,12 +33,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 startActivity(Intent(this, SearchActivity::class.java))
             binding.areaBtn.id->
                 startActivity(Intent(this, SelectAreaActivity::class.java))
+            binding.registerBtn.id ->
+                startActivity(Intent(this, BookRegisterActivity::class.java))
         }
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val intent = Intent(this, BookInfo::class.java)
-        intent.putExtra("name", "bookName")
+        val item:BookItem = adapter.getItem(position) as BookItem
+        val intent = Intent(this, BookInfoActivity::class.java)
+        intent.putExtra("bookImage", item.img)
+        intent.putExtra("name", item.title)
+        intent.putExtra("note", item.note)
         startActivity(intent)
     }
 }
