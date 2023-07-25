@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         binding.bookList.adapter = adapter
 
         binding.searchBtn.setOnClickListener(this)
+        binding.registerBtn.setOnClickListener(this)
         binding.areaBtn.setOnClickListener(this)
         binding.bookList.onItemClickListener = this
     }
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 startActivity(Intent(this, SearchActivity::class.java))
             binding.areaBtn.id->
                 startActivity(Intent(this, SelectAreaActivity::class.java))
+            binding.registerBtn.id ->
+                startActivity(Intent(this, BookRegisterActivity::class.java))
         }
     }
 
