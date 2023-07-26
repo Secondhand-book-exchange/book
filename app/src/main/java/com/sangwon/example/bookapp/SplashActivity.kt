@@ -40,7 +40,7 @@ class SplashActivity : AppCompatActivity() {
             }*/
             startActivity(Intent(this, LoginActivity::class.java))
 
-            Handler().postDelayed({finish()}, 1000)
+            finish()
         }, 2000)
     }
     private fun getKeyHash() {

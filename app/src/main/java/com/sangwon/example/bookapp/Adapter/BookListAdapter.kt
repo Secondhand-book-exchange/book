@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.sangwon.example.bookapp.Item.BookItem
 import com.sangwon.example.bookapp.R
 
-class MainBookListAdapter : BaseAdapter() {
+class BookListAdapter : BaseAdapter() {
     private val items = ArrayList<BookItem>()
     override fun getCount(): Int {
         return items.size
