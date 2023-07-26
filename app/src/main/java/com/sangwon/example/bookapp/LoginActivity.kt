@@ -43,6 +43,9 @@ class LoginActivity : AppCompatActivity() {
                     val data = result.data
                     val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                     getGoogleInfo(task)
+                    Toast.makeText(this, "구글 로그인 성공", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
                 }
             }
 
