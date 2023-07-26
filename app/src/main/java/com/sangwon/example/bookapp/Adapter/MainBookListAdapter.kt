@@ -35,7 +35,7 @@ class MainBookListAdapter : BaseAdapter() {
         }
         view.findViewById<ImageView>(R.id.bookImage).setImageURI(items[position].img)
         view.findViewById<TextView>(R.id.title).text = items[position].title
-        view.findViewById<TextView>(R.id.note).text = items[position].note
+        view.findViewById<TextView>(R.id.note).text = items[position].subscript
         val type = view.findViewById<TextView>(R.id.type)
         if (items[position].type()) {
             type.text = "판매중"
