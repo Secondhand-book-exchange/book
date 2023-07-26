@@ -4,9 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import com.sangwon.example.bookapp.databinding.ActivityBookRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -32,7 +29,10 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             signIn(binding.idEditText.text.toString(), binding.passwordEditText.text.toString())
         }
-        binding.login.setOnClickListener(this)
+        // 로그인 버튼
+        binding.loginButton.setOnClickListener {
+            signIn(binding.idEditText.text.toString(), binding.passwordEditText.text.toString())
+        }
         binding.post.setOnClickListener {
             val intent = Intent(this, BookRegisterActivity::class.java)
             startActivity(intent)
