@@ -6,19 +6,19 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import com.google.firebase.FirebaseApp
-import com.sangwon.example.bookapp.Adapter.MainBookListAdapter
+import com.sangwon.example.bookapp.Adapter.BookListAdapter
 import com.sangwon.example.bookapp.Item.BookItem
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnItemClickListener {
     private val binding by lazy{ ActivityMainBinding.inflate(layoutInflater)}
-    private lateinit var adapter:MainBookListAdapter
+    private lateinit var adapter:BookListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         FirebaseApp.initializeApp(this)
 
-        adapter = MainBookListAdapter()
+        adapter = BookListAdapter()
         binding.bookList.adapter = adapter
 
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
