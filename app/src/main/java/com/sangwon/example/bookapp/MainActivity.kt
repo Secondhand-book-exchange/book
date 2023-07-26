@@ -46,9 +46,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val item:BookItem = adapter.getItem(position) as BookItem
         val intent = Intent(this, BookInfoActivity::class.java)
-        intent.putExtra("bookImage", item.img)
-        intent.putExtra("name", item.title)
-        intent.putExtra("note", item.note)
+        intent.putExtra("BookCover", item.img)
+        intent.putExtra("BookTitle", item.title)
+        intent.putExtra("Author", item.author)
+        intent.putExtra("ISBN", item.ISBN)
+        intent.putExtra("Subscript", item.subscript)
         startActivity(intent)
     }
 }
