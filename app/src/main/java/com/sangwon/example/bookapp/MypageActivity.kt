@@ -4,22 +4,28 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.sangwon.example.bookapp.databinding.ActivityMypageBinding
 
 class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMypageBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        auth = FirebaseAuth.getInstance()
+
+        title = "마이페이지"
+        /*
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.back) // 뒤로가기 버튼 아이콘 설정
             setTitle("") // 타이틀 비움
-        }
+        }*/
 
         binding.logoutButton.setOnClickListener {
             logout()
@@ -35,6 +41,7 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+        auth.signOut() // Firebase 로그아웃
         // 로그아웃 처리를 여기에 구현 (FirebaseAuth에서 로그아웃 등)
         // ...
 

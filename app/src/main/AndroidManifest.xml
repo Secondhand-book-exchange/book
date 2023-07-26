@@ -32,7 +32,8 @@
             android:name=".SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".MypageActivity"
+            android:name=".MyPageActivity"
+            android:parentActivityName=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
