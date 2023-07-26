@@ -7,20 +7,20 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/editTextBookTitle"
+        android:id="@+id/BookTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="책 이름"/>
 
     <EditText
-        android:id="@+id/editTextAuthor"
+        android:id="@+id/Author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="저자"/>
 
     <EditText
-        android:id="@+id/editTextISBN"
+        android:id="@+id/ISBN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -36,14 +36,14 @@
         android:contentDescription="책 표지 이미지"/>
 
     <EditText
-        android:id="@+id/editTextLocation"
+        android:id="@+id/Location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="거래 동네"/>
 
     <Spinner
-        android:id="@+id/spinnerBookStatus"
+        android:id="@+id/BookStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -51,14 +51,21 @@
         android:entries="@array/book_status_options"/>
 
     <CheckBox
-        android:id="@+id/checkBoxForSale"
+        android:id="@+id/CheckSale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="판매 여부"/>
 
+    <EditText
+        android:id="@+id/Subscript"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="내용"
+        />
+
     <Button
-        android:id="@+id/buttonRegisterBook"
+        android:id="@+id/RegisterBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
