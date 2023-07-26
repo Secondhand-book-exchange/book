@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -42,20 +41,14 @@
         android:layout_marginTop="16dp"
         android:hint="거래 동네"/>
 
-    <Spinner
+    <EditText
         android:id="@+id/BookStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:hint="책 상태(양심)"
+        />
 
-        android:entries="@array/book_status_options"/>
-
-    <CheckBox
-        android:id="@+id/CheckSale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="판매 여부"/>
 
     <EditText
         android:id="@+id/Subscript"
