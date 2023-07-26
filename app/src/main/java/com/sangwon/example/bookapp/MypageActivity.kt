@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.sangwon.example.bookapp.databinding.ActivityMypageBinding
 
@@ -41,6 +43,7 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+        GoogleSignIn.getClient(this, GoogleSignInOptions.Builder().build()).revokeAccess()
         auth.signOut() // Firebase 로그아웃
         // 로그아웃 처리를 여기에 구현 (FirebaseAuth에서 로그아웃 등)
         // ...
