@@ -19,7 +19,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root) // 레이아웃 설정
         auth = Firebase.auth
 
-        // 계정 생성 버튼
+        // 계정 생성 버튼 (id를 createAccountButton으로 수정)
         binding.createAccountButton.setOnClickListener {
             createAccount(binding.signupID.text.toString(), binding.signupPassword.text.toString())
         }
@@ -38,12 +38,19 @@ class SignUpActivity : AppCompatActivity() {
                         ).show()
                         finish() // 가입창 종료
                     } else {
+                        // 계정 생성 실패 원인을 확인하여 메시지 표시
+                        val errorMessage = task.exception?.message ?: "계정 생성 실패"
                         Toast.makeText(
-                            this, "계정 생성 실패",
+                            this, errorMessage,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
+        } else {
+            Toast.makeText(
+                this, "이메일과 비밀번호를 입력해주세요.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

@@ -11,7 +11,7 @@ import com.sangwon.example.bookapp.Item.BookItem
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnItemClickListener {
-    private val binding = ActivityMainBinding.inflate(layoutInflater)
+    private val binding by lazy{ ActivityMainBinding.inflate(layoutInflater)}
     private lateinit var adapter:MainBookListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
