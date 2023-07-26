@@ -21,6 +21,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         adapter = MainBookListAdapter()
         binding.bookList.adapter = adapter
 
+        // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
+        binding.myPageButton.setOnClickListener {
+            startActivity(Intent(this, MyPageActivity::class.java))
+        }
+
         binding.searchBtn.setOnClickListener(this)
         binding.registerBtn.setOnClickListener(this)
         binding.areaBtn.setOnClickListener(this)
