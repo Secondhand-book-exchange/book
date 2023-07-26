@@ -1,4 +1,4 @@
-<!-- activity_login.xml -->
+<!-- activity_sign_up.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/idEditText"
+        android:id="@+id/signupID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="이메일"
@@ -14,7 +14,7 @@
         android:layout_marginBottom="16dp" />
 
     <EditText
-        android:id="@+id/passwordEditText"
+        android:id="@+id/signupPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="비밀번호"
@@ -22,26 +22,10 @@
         android:layout_marginBottom="16dp" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/createAccountButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="로그인"
+        android:text="계정 생성"
         android:layout_marginBottom="8dp" />
 
-    <Button
-        android:id="@+id/signupButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="회원가입" />
-
 </LinearLayout>
-
-    <Button
-        android:id="@+id/post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="책등록"/>
