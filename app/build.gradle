@@ -55,4 +55,6 @@ dependencies {
     
     // 파이어 스토리지
     implementation 'com.google.firebase:firebase-storage-ktx'
+
+    implementation 'com.opencsv:opencsv:5.6'
 }
