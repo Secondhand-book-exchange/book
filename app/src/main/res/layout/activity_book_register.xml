@@ -27,11 +27,12 @@
 
     <ImageView
         android:id="@+id/BookImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@drawable/imageadd"
+        android:scaleType="fitXY"
         android:contentDescription="책 표지 이미지"/>
 
     <EditText
