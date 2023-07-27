@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             signIn(binding.idEditText.text.toString(), binding.passwordEditText.text.toString())
         }
-        binding.post.setOnClickListener {
+        binding.loginForGoogle.setOnClickListener {
             googleLogin()
         }
     }
