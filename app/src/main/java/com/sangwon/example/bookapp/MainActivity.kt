@@ -1,14 +1,13 @@
 package com.sangwon.example.bookapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -22,8 +21,8 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnItemClickListener {
-    private val binding by lazy{ ActivityMainBinding.inflate(layoutInflater)}
-    private lateinit var adapter:BookListAdapter
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private lateinit var adapter: BookListAdapter
 
     lateinit var listview: ListView //언제 쓰지?
 
@@ -44,18 +43,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         BookList()
 
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
-        binding.myPageButton.setOnClickListener {
-            startActivity(Intent(this, MyPageActivity::class.java))
-        }
+        binding.profileImage.setOnClickListener(this)
+        binding.themesBtn.setOnClickListener(this)
+        binding.bookBtn.setOnClickListener(this)
+        binding.menuBtn.setOnClickListener(this)
 
-        binding.areaBtn.setOnClickListener(this)
         binding.bookList.onItemClickListener = this
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            binding.areaBtn.id->
-                startActivity(Intent(this, SelectAreaActivity::class.java))
+        when (v?.id) {
+            binding.profileImage.id -> startActivity(Intent(this, MyPageActivity::class.java))
+            binding.themesBtn.id -> {}
+            binding.bookBtn.id -> {}
+            binding.menuBtn.id -> {}
         }
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             /**
@@ -88,14 +89,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
 
     //이거 클릭하면 이동하는 해당 게시물 페이지로 이동하는건가?
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val item:BookItem = adapter.getItem(position) as BookItem
+        val item: BookItem = adapter.getItem(position) as BookItem
         val intent = Intent(this, BookInfoActivity::class.java)
-        intent.putExtra("BookCover", item.Img)
+        intent.putExtra("BookCover", item.Img.toString())
         intent.putExtra("BookTitle", item.BookTitle)
         intent.putExtra("Author", item.Author)
         intent.putExtra("Subscript", item.Subscript)
         startActivity(intent)
     }
+
     private fun BookList() {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
