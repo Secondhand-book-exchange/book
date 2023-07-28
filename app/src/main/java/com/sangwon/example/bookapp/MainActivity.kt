@@ -48,21 +48,42 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
             startActivity(Intent(this, MyPageActivity::class.java))
         }
 
-        binding.searchBtn.setOnClickListener(this)
-        binding.registerBtn.setOnClickListener(this)
         binding.areaBtn.setOnClickListener(this)
         binding.bookList.onItemClickListener = this
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            binding.searchBtn.id->
-                startActivity(Intent(this, SearchActivity::class.java))
             binding.areaBtn.id->
                 startActivity(Intent(this, SelectAreaActivity::class.java))
-            binding.registerBtn.id ->
-                startActivity(Intent(this, BookRegisterActivity::class.java))
         }
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            /**
+             * 하단 네비게이션바
+             */
+            when (item.itemId) {
+                R.id.home -> {
+                    false
+                }
+
+                R.id.search -> {
+                    startActivity(Intent(this, SearchActivity::class.java))
+                    false
+                }
+
+                R.id.map -> {
+                    startActivity(Intent(this, BookRegisterActivity::class.java))
+                    false
+                }
+
+                R.id.notification -> {
+                    false
+                }
+
+                else -> false
+            }
+        }
+
     }
 
     //이거 클릭하면 이동하는 해당 게시물 페이지로 이동하는건가?
