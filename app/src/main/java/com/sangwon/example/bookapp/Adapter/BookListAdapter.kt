@@ -2,12 +2,14 @@ package com.sangwon.example.bookapp.Adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.provider.ContactsContract.CommonDataKinds.Im
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.sangwon.example.bookapp.Item.BookItem
 import com.sangwon.example.bookapp.R
 
@@ -31,11 +33,18 @@ class BookListAdapter : BaseAdapter() {
         else {
             val inflate: LayoutInflater =
                 context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            inflate.inflate(R.layout.book_item, parent)
+            inflate.inflate(R.layout.book_item, parent,false)
         }
-        view.findViewById<ImageView>(R.id.bookImage).setImageURI(items[position].img)
-        view.findViewById<TextView>(R.id.title).text = items[position].title
-        view.findViewById<TextView>(R.id.note).text = items[position].subscript
+
+
+        val iconImageView:ImageView = view.findViewById<ImageView>(R.id.bookImage)
+        Glide.with(context!!)
+            .load(items[position].Img)
+            .into(iconImageView)
+
+
+        view.findViewById<TextView>(R.id.title).text = items[position].BookTitle
+        view.findViewById<TextView>(R.id.note).text = items[position].Subscript
         val type = view.findViewById<TextView>(R.id.type)
         if (items[position].type()) {
             type.text = "판매중"
