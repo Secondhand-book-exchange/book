@@ -9,6 +9,7 @@ import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -31,7 +32,7 @@ class BookRegisterActivity : AppCompatActivity() {
     private lateinit var Location : String
     private lateinit var BookStatus : String
     private lateinit var Subscript : String
-    private var IsSale by Delegates.notNull<Boolean>()
+    private var IsSale : Int = 1
 
 
     val user = auth.currentUser
@@ -40,6 +41,8 @@ class BookRegisterActivity : AppCompatActivity() {
 
     var storage = Firebase.storage
     var storageRef = storage.reference
+
+    val timestamp = Timestamp.now()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBookRegisterBinding.inflate(layoutInflater)
@@ -51,7 +54,7 @@ class BookRegisterActivity : AppCompatActivity() {
             Location = binding.Location.text.toString()
             BookStatus = binding.BookStatus.toString()
             Subscript = binding.Subscript.text.toString()
-            IsSale = false
+
 
 
             uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야?
@@ -110,13 +113,14 @@ class BookRegisterActivity : AppCompatActivity() {
                 val Post = Posts(
                     BookTitle,
                     Author,
-                    Location,
                     BookStatus,
                     Subscript,
                     imagePath,
                     IsSale,
                     user!!.uid,
-                    null,
+                    Location,
+                    timestamp,
+                    "동화책",
                 )
 
                 // 데이터베이스에 추가하는 코드는 여기에 작성하면 됩니다.
