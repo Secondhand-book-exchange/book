@@ -68,7 +68,7 @@ class SignUpActivity : AppCompatActivity() {
 
         // Firestore 데이터베이스에 사용자 정보 저장
         db.collection("users")
-            .document(UserId)
+            .document(Firebase.auth.currentUser!!.uid)
             .set(user)
             .addOnSuccessListener {
                 Toast.makeText(this, "회원 정보가 저장되었습니다.", Toast.LENGTH_SHORT).show()

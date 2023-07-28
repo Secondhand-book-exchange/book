@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.sangwon.example.bookapp.databinding.ActivityMypageBinding
 
 class MyPageActivity : AppCompatActivity() {
@@ -46,7 +48,7 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     private fun loadUserInfo(userId: String) {
-        db.collection("users").document(userId)
+        db.collection("users").document(Firebase.auth.currentUser!!.uid)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
