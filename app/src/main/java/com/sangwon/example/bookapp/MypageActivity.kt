@@ -1,17 +1,23 @@
 package com.sangwon.example.bookapp
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sangwon.example.bookapp.databinding.ActivityMypageBinding
 
 class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMypageBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
+    companion object {
+        private const val REQUEST_USER_INFO = 1001
+        private const val TAG = "MypageActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,48 +25,69 @@ class MyPageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         title = "마이페이지"
-        /*
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.back) // 뒤로가기 버튼 아이콘 설정
-            setTitle("") // 타이틀 비움
-        }*/
+
+        binding.editProfileButton.setOnClickListener {
+            startActivityForResult(Intent(this, UserInfoActivity::class.java), REQUEST_USER_INFO)
+        }
 
         binding.logoutButton.setOnClickListener {
             logout()
         }
 
-        // TODO: 프로필 이미지, 이름 설정
-        // binding.profileImage.setImageResource(R.drawable.profile_image_placeholder)
-        // binding.usernameTextView.text = "사용자 이름"
+        val currentUser = auth.currentUser
+        currentUser?.let {
+            // Firebase에서 사용자 정보를 읽어옴
+            val userId = it.uid
+            loadUserInfo(userId)
+        }
+    }
 
-        // 버튼 클릭 이벤트 등록
-        // ...
-
+    private fun loadUserInfo(userId: String) {
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val user = document.toObject(User::class.java)
+                    user?.let {
+                        // 사용자 정보를 UI에 설정
+                        binding.usernameTextView.text = it.name
+                        binding.userEmailTextView.text = it.userId
+                        binding.PhoneNumberTextView.text = it.phoneNumber
+                    }
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
     }
 
     private fun logout() {
-        GoogleSignIn.getClient(this, GoogleSignInOptions.Builder().build()).revokeAccess()
         auth.signOut() // Firebase 로그아웃
-        // 로그아웃 처리를 여기에 구현 (FirebaseAuth에서 로그아웃 등)
-        // ...
 
         // LoginActivity로 이동
         val intent = Intent(this, LoginActivity::class.java)
-
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> onBackPressed() // 뒤로가기 버튼 클릭 시 동작
-            // 다른 메뉴 항목이 있다면 여기에 추가
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_USER_INFO && resultCode == UserInfoActivity.RESULT_CODE_SUCCESS) {
+            // UserInfoActivity로부터 전달받은 정보를 사용하여 화면 업데이트
+            val newName = data?.getStringExtra("userName")
+            val newPhoneNumber = data?.getStringExtra("phoneNumber")
+            if (!newName.isNullOrEmpty()) {
+                binding.usernameTextView.text = newName
+            }
+            if (!newPhoneNumber.isNullOrEmpty()) {
+                binding.PhoneNumberTextView.text = newPhoneNumber
+            }
         }
-        return super.onOptionsItemSelected(item)
     }
 }

@@ -14,6 +14,14 @@ data class Posts(
     val Time: String? = null, //등록 시간
 
 )
+
+data class User(
+    val name: String = "",
+    val userId: String = "",
+    val passWord: String = "",
+    val phoneNumber: String = ""
+)
+
 class Model {
     var imageUrl: String? = null
 

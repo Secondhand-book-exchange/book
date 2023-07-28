@@ -53,6 +53,7 @@
             android:exported="false" />
         <activity
             android:name=".UserInfoActivity"
+            android:parentActivityName=".MyPageActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
