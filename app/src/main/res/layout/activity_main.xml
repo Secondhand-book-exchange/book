@@ -4,38 +4,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp"
     tools:context=".MainActivity">
 
-    <!-- 마이페이지로 넘어갈 버튼 -->
-    <Button
-        android:id="@+id/myPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="마이페이지로 이동"
-        android:layout_centerInParent="true" />
-
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/mainHead"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/areaBtn"
-            android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+        <ImageButton
+            android:id="@+id/menuBtn"
+            android:layout_width="40dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/baseline_menu_24"
+            android:background="#fff"
+            android:scaleType="fitXY" />
+        <!-- 마이페이지로 넘어갈 버튼 -->
+        <RelativeLayout
+            android:id="@+id/profileForm"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_gravity="center"
-            android:text="동네" />
+            android:orientation="horizontal"
+            android:layout_toStartOf="@id/menuBtn">
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:src="@drawable/baseline_account_circle_24"
+                android:scaleType="fitCenter"/>
+            <!-- 마이페이지로 넘어갈 버튼 -->
+            <RelativeLayout
+                android:id="@+id/profileText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="4"
+                android:layout_toEndOf="@id/profileImage">
+                <!-- 마이페이지로 넘어갈 버튼 -->
+                <TextView
+                    android:id="@+id/basicText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="오신것을 환영합니다."
+                    android:textColor="#000" />
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:layout_margin="10dp"
-            android:background="@mipmap/ic_launcher" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/basicText"
+                    android:text="nickName 님"
+                    android:textSize="25sp"
+                    android:textColor="#000" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -45,12 +69,20 @@
         app:menu="@menu/footer_menu"
         android:layout_alignParentBottom="true" />
 
-    <ListView
-        android:id="@+id/bookList"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mainHead"
-        android:layout_marginTop="2dp"
-        android:layout_above="@id/bottomNavigationView"/>
+        android:layout_above="@id/bottomNavigationView">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp">
+            <ListView
+                android:id="@+id/bookList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
