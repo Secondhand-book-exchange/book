@@ -7,6 +7,14 @@
     android:padding="10dp"
     tools:context=".MainActivity">
 
+    <!-- 마이페이지로 넘어갈 버튼 -->
+    <Button
+        android:id="@+id/myPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="마이페이지로 이동"
+        android:layout_centerInParent="true" />
+
     <LinearLayout
         android:id="@+id/mainHead"
         android:layout_width="match_parent"

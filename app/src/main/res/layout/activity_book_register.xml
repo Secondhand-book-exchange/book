@@ -1,9 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookRegisterActivity">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:id="@+id/BookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="책 이름"/>
+
+    <EditText
+        android:id="@+id/Author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="저자"/>
+
+    <EditText
+        android:id="@+id/ISBN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="ISBN"/>
+
+    <ImageView
+        android:id="@+id/BookImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/imageadd"
+        android:scaleType="fitXY"
+        android:contentDescription="책 표지 이미지"/>
+
+    <EditText
+        android:id="@+id/Location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="거래 동네"/>
+
+    <EditText
+        android:id="@+id/BookStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="책 상태(양심)"
+        />
+
+
+    <EditText
+        android:id="@+id/Subscript"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="내용"
+        />
+
+    <Button
+        android:id="@+id/RegisterBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="등록하기"/>
+
+</LinearLayout>
