@@ -9,9 +9,10 @@ data class BookItem(val Img:Uri,
                     val BookStatus:String,
                     val Subscript:String,
                     val Locate:String,
+                    val Category:String,
                     val type:Int)
 {
     fun type():Boolean{
-        return type==0
+        return type == 1
     }
 }

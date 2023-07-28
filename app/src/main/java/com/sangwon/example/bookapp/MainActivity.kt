@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         binding.areaBtn.setOnClickListener(this)
         binding.bookList.onItemClickListener = this
     }
+    override fun onResume() {
+        super.onResume()
+        adapter.clear()
+        BookList()
+    }
 
     override fun onClick(v: View?) {
         when(v?.id){
@@ -96,6 +101,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         intent.putExtra("Subscript", item.Subscript)
         startActivity(intent)
     }
+
     private fun BookList() {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
@@ -111,13 +117,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 val booktitle = document.getString("bookTitle")
                 val author = document.getString("author")
                 val bookStatus = document.getString("bookStatus")
-                // val date = document.getString("date") 보류
                 // val id = document.id 이거 왜 필요했지??
-                val time = document.getString("time")
+                val time = document.getTimestamp("timestamp")
+                // 나중에 time에서 Date 뽑아내기
                 val locate = document.getString("locate")
                 val subscript = document.getString("subscript")
                 imagePath = document.getString("image").toString()
-
+                val issale = document.getLong("isSale")!!.toInt()
+                val category = document.getString("category")
                 // 이미지를 등록하지 않은 경우 default 이미지
                 if (imagePath == "") {
                     imagePath = "images/default.png"
@@ -136,7 +143,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                             Subscript = subscript ?: "",
                             Date = "",
                             Locate = "",
-                            type = 1,
+                            Category = category ?: "",
+                            type = issale,
                         )
                         postItems.add(postItem)
 

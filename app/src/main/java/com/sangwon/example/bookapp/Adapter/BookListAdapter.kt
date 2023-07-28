@@ -60,4 +60,8 @@ class BookListAdapter : BaseAdapter() {
     fun addBook(item: BookItem) {
         items.add(item)
     }
+
+    fun clear() {
+        items.clear()
+    }
 }
