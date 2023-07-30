@@ -2,7 +2,6 @@ package com.sangwon.example.bookapp.Adapter
 
 import android.content.Context
 import android.graphics.Color
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

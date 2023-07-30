@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
@@ -24,10 +25,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var adapter: BookListAdapter
 
-    lateinit var listview: ListView //언제 쓰지?
+    private lateinit var listview: ListView //언제 쓰지?
 
     var db = Firebase.firestore
-    private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var imagePath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +38,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         adapter = BookListAdapter()
 
         listview.adapter = adapter
-        firebaseStorage = FirebaseStorage.getInstance()
 
-        BookList()
+        callBookList()
 
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
         binding.profileImage.setOnClickListener(this)
@@ -49,15 +48,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         binding.menuBtn.setOnClickListener(this)
 
         binding.bookList.onItemClickListener = this
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.profileImage.id -> startActivity(Intent(this, MyPageActivity::class.java))
-            binding.themesBtn.id -> {}
-            binding.bookBtn.id -> {}
-            binding.menuBtn.id -> {}
-        }
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             /**
              * 하단 네비게이션바
@@ -84,7 +74,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 else -> false
             }
         }
+    }
 
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            binding.profileImage.id -> startActivity(Intent(this, MyPageActivity::class.java))
+            binding.themesBtn.id -> {}
+            binding.bookBtn.id -> {}
+            binding.menuBtn.id -> {}
+        }
     }
 
     //이거 클릭하면 이동하는 해당 게시물 페이지로 이동하는건가?
@@ -98,7 +96,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         startActivity(intent)
     }
 
-    private fun BookList() {
+    private fun callBookList() {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
 
@@ -110,7 +108,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
             }
 
             for (document in result) {
-                val booktitle = document.getString("bookTitle")
+                val bookTitle = document.getString("bookTitle")
                 val author = document.getString("author")
                 val bookStatus = document.getString("bookStatus")
                 // val date = document.getString("date") 보류
@@ -124,6 +122,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 if (imagePath == "") {
                     imagePath = "images/default.png"
                 }
+                val firebaseStorage = FirebaseStorage.getInstance()
 
                 val storageReference = firebaseStorage.getReference().child(imagePath)
 
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                         val imageData = task.result
                         val postItem = BookItem(
                             Img = imageData,
-                            BookTitle = booktitle ?: "",
+                            BookTitle = bookTitle ?: "",
                             Author = author ?: "",
                             BookStatus = bookStatus ?: "",
                             Subscript = subscript ?: "",
@@ -148,6 +147,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                                 adapter.addBook(item)
                             }
                             adapter.notifyDataSetChanged()
+
+                            var totalHeight = 0
+                            val desiredWidth =
+                                View.MeasureSpec.makeMeasureSpec(listview.width, View.MeasureSpec.AT_MOST)
+
+                            val listItem: View = adapter.getView(0, null, listview)
+                            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+                            totalHeight = listItem.measuredHeight * adapter.count
+
+                            val params: ViewGroup.LayoutParams = listview.layoutParams
+                            params.height = totalHeight + listview.dividerHeight * (adapter.count - 1)
+                            listview.layoutParams = params
+                            listview.requestLayout()
                         }
                     } else {
                         Log.e("downloadUrl", "failed..")

@@ -33,6 +33,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
+                android:layout_marginEnd="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/baseline_account_circle_24" />
             <!-- 마이페이지로 넘어갈 버튼 -->
@@ -117,8 +118,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:textColor="#000"
-                    android:text="장르별 보기" />
+                    android:text="장르별 보기"
+                    android:textSize="25sp"/>
 
                 <Button
                     android:id="@+id/themesBtn"
@@ -127,15 +130,17 @@
                     android:layout_alignParentEnd="true"
                     android:background="#0000"
                     android:text=">"
+                    android:textAlignment="textEnd"
                     android:textColor="#000"
-                    android:textSize="20sp" />
+                    android:textSize="25sp" />
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/displayThemes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/themesText" />
+                android:layout_below="@id/themesText"
+                android:orientation="horizontal"/>
 
             <RelativeLayout
                 android:id="@+id/bookText"
@@ -146,8 +151,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:text="최근본 서적"
-                    android:textColor="#000"/>
+                    android:textColor="#000"
+                    android:textSize="25sp"/>
 
                 <Button
                     android:id="@+id/bookBtn"
@@ -156,8 +163,9 @@
                     android:layout_alignParentEnd="true"
                     android:background="#0000"
                     android:text=">"
+                    android:textAlignment="textEnd"
                     android:textColor="#000"
-                    android:textSize="20sp" />
+                    android:textSize="25sp" />
             </RelativeLayout>
 
             <ListView
