@@ -15,6 +15,14 @@ data class Posts(
     val Category : String? =null
 
 )
+
+data class User(
+    val name: String = "",
+    val userId: String = "",
+    val passWord: String = "",
+    val phoneNumber: String = ""
+)
+
 class Model {
     var imageUrl: String? = null
 
