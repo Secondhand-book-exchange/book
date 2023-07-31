@@ -68,6 +68,9 @@ class BookRegisterActivity : AppCompatActivity() {
             galleryIntent.type = "image/*"
             startActivityForResult(galleryIntent, 1)
         }
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, resources.getStringArray(R.array.status))
+        binding.BookStatus.adapter = spinnerAdapter
+        binding.BookStatus.setSelection(0)
 
 
 
@@ -88,6 +91,12 @@ class BookRegisterActivity : AppCompatActivity() {
             binding.BookImage.setBackgroundResource(0)
             binding.BookImage.setImageURI(imageUri)
 
+        }
+        val rg = binding.category
+        for (v: String in resources.getStringArray(R.array.category)){
+            val rbtn = RadioButton(this)
+            rbtn.text = v
+            rg.addView(rbtn)
         }
     }
     // Upload the image to Firestore
