@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
     override fun onResume() {
         super.onResume()
         adapter.clear()
-        BookList()
+        callBookList()
     }
 
     override fun onClick(v: View?) {
@@ -130,17 +130,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         }
     }
 
-    //이거 클릭하면 이동하는 해당 게시물 페이지로 이동하는건가?
-    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val item:BookItem = adapter.getItem(position) as BookItem
-        val intent = Intent(this, BookInfoActivity::class.java)
-        intent.putExtra("BookCover", item.Img)
-        intent.putExtra("BookTitle", item.BookTitle)
-        intent.putExtra("Author", item.Author)
-        intent.putExtra("Subscript", item.Subscript)
-        startActivity(intent)
-    }
-
     private fun callBookList() {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
@@ -157,13 +146,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 val author = document.getString("author")
                 val bookStatus = document.getString("bookStatus")
                 // val id = document.id 이거 왜 필요했지??
+                //내가 쓰려고 가져 왔다가 안 썼나바
                 val time = document.getTimestamp("timestamp")
                 // 나중에 time에서 Date 뽑아내기
                 val locate = document.getString("locate")
                 val subscript = document.getString("subscript")
-                val isSale = document.get("isSale") as Long
                 imagePath = document.getString("image").toString()
-                val issale = document.getLong("isSale")!!.toInt()
+                val isSale = document.getLong("isSale")!!.toInt()
                 val category = document.getString("category")
                 // 이미지를 등록하지 않은 경우 default 이미지
                 if (imagePath == "") {
@@ -171,7 +160,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 }
                 val firebaseStorage = FirebaseStorage.getInstance()
 
-                val storageReference = firebaseStorage.getReference().child(imagePath)
+                val storageReference = firebaseStorage.reference.child(imagePath)
 
                 storageReference.downloadUrl.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -185,7 +174,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                             Date = "",
                             Locate = "",
                             Category = category ?: "",
-                            type = issale,
+                            type = isSale,
                         )
                         postItems.add(postItem)
 
@@ -196,13 +185,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                             }
                             adapter.notifyDataSetChanged()
 
-                            var totalHeight = 0
                             val desiredWidth =
                                 View.MeasureSpec.makeMeasureSpec(listview.width, View.MeasureSpec.AT_MOST)
 
                             val listItem: View = adapter.getView(0, null, listview)
                             listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
-                            totalHeight = listItem.measuredHeight * adapter.count
+                            val totalHeight = listItem.measuredHeight * adapter.count
 
                             val params: ViewGroup.LayoutParams = listview.layoutParams
                             params.height = totalHeight + listview.dividerHeight * (adapter.count - 1)
