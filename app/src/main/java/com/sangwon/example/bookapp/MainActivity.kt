@@ -24,12 +24,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnItemClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnItemClickListener,
+    ThemeAdapter.OnItemClickListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var adapter: BookListAdapter
-
     private lateinit var listview: ListView //언제 쓰지?
-
+    private lateinit var themeAdapter:ThemeAdapter
     var db = Firebase.firestore
     private lateinit var imagePath: String
 
@@ -60,12 +60,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         val spacingInPixel = resources.getDimensionPixelSize(R.dimen.single_theme_margin)
         binding.displayThemes.addItemDecoration(ThemeAdapter.HorizontalItemDecoration(spacingInPixel))
         binding.displayThemes.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val themeAdapter = ThemeAdapter()
+        themeAdapter = ThemeAdapter()
         binding.displayThemes.adapter = themeAdapter
         for (i in 0 until icons.size){
             themeAdapter.add(BookTheme(icons[i], themes[i]))
         }
         themeAdapter.notifyDataSetChanged()
+        themeAdapter.setOnItemClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         startActivity(intent)
     }
 
-    fun setListener(){
+    private fun setListener(){
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
         binding.profileImage.setOnClickListener(this)
         binding.themesBtn.setOnClickListener(this)
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 val time = document.getString("time")
                 val locate = document.getString("locate")
                 val subscript = document.getString("subscript")
-                val isSale = document.getString("isSale")?.toInt()
+                val isSale = document.get("isSale") as Long
                 imagePath = document.getString("image").toString()
 
                 // 이미지를 등록하지 않은 경우 default 이미지
@@ -166,7 +167,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                             Subscript = subscript ?: "",
                             Date = "",
                             Locate = "",
-                            type = isSale ?: 1,
+                            type = isSale.toInt(),
                         )
                         postItems.add(postItem)
 
@@ -197,5 +198,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
             }
 
         }
+    }
+
+    override fun onItemClick(view: View, pos: Int) {
+        val intent = Intent(this, BookListActivity::class.java)
+        intent.putExtra("theme", themeAdapter.list[pos].theme)
+        startActivity(intent)
     }
 }
