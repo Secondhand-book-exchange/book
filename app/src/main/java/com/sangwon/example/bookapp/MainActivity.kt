@@ -10,6 +10,7 @@ import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -42,9 +43,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
 
         listview.adapter = adapter
 
-        callBookList()
+
         setListener()
         setThemeRecyclerView()
+
     }
 
     private fun setThemeRecyclerView() {
@@ -136,7 +138,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
 
             val result = withContext(Dispatchers.IO) {
                 db.collection("Posts")
-                    //.orderBy("timestamp", Query.Direction.DESCENDING) 아직 시간 속성 안 넣었어
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .await()
             }
