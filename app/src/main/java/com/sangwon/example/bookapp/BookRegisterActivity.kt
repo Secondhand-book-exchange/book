@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.webkit.MimeTypeMap
+import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Timestamp
@@ -72,8 +74,12 @@ class BookRegisterActivity : AppCompatActivity() {
         binding.BookStatus.adapter = spinnerAdapter
         binding.BookStatus.setSelection(0)
 
-
-
+        val rg = binding.category
+        for (v: String in resources.getStringArray(R.array.category)){
+            val rbtn = RadioButton(this)
+            rbtn.text = v
+            rg.addView(rbtn)
+        }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -91,12 +97,6 @@ class BookRegisterActivity : AppCompatActivity() {
             binding.BookImage.setBackgroundResource(0)
             binding.BookImage.setImageURI(imageUri)
 
-        }
-        val rg = binding.category
-        for (v: String in resources.getStringArray(R.array.category)){
-            val rbtn = RadioButton(this)
-            rbtn.text = v
-            rg.addView(rbtn)
         }
     }
     // Upload the image to Firestore
