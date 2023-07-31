@@ -29,10 +29,17 @@ class MyPageActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        title = "마이페이지"
+        title = "                마이페이지"
 
         binding.editProfileButton.setOnClickListener {
-            startActivityForResult(Intent(this, UserInfoActivity::class.java), REQUEST_USER_INFO)
+            // 개인정보 수정 화면으로 이동할 때 사용자 정보 전달
+            val currentUser = auth.currentUser
+            currentUser?.let {
+                val intent = Intent(this, UserInfoActivity::class.java)
+                intent.putExtra("userName", binding.usernameTextView.text.toString())
+                intent.putExtra("phoneNumber", binding.PhoneNumberTextView.text.toString())
+                startActivityForResult(intent, REQUEST_USER_INFO)
+            }
         }
 
         binding.logoutButton.setOnClickListener {
