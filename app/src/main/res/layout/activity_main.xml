@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f6f6f6"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -17,7 +18,7 @@
             android:layout_width="40dp"
             android:layout_height="60dp"
             android:layout_alignParentEnd="true"
-            android:background="#fff"
+            android:background="#0fff"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_menu_24" />
         <!-- 마이페이지로 넘어갈 버튼 -->
@@ -69,13 +70,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#fff"
+        android:background="#bfff"
         app:menu="@menu/footer_menu" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomNavigationView"
         android:layout_below="@id/mainHead">
 
         <RelativeLayout

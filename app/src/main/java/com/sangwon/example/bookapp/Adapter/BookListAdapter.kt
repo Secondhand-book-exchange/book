@@ -9,7 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.sangwon.example.bookapp.Item.BookItem
+import com.sangwon.example.bookapp.BookItem
 import com.sangwon.example.bookapp.R
 
 class BookListAdapter : BaseAdapter() {

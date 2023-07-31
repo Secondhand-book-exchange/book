@@ -1,6 +1,5 @@
 package com.sangwon.example.bookapp.Adapter
 
-import android.content.Intent
 import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.sangwon.example.bookapp.Item.BookTheme
+import com.sangwon.example.bookapp.BookTheme
 import com.sangwon.example.bookapp.R
 
 class ThemeAdapter : RecyclerView.Adapter<ThemeAdapter.ThemeView>() {
@@ -57,7 +56,7 @@ class ThemeAdapter : RecyclerView.Adapter<ThemeAdapter.ThemeView>() {
     }
 
     override fun onBindViewHolder(view: ThemeView, position: Int) {
-        view.itemView.findViewById<ImageView>(R.id.icon).setImageResource(list[position].icon)
+        view.itemView.findViewById<ImageView>(R.id.icon).setBackgroundResource(list[position].icon)
         view.itemView.findViewById<TextView>(R.id.theme).text = list[position].theme
     }
 

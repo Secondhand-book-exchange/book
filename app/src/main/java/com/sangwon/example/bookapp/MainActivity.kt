@@ -15,8 +15,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.bookapp.Adapter.BookListAdapter
 import com.sangwon.example.bookapp.Adapter.ThemeAdapter
-import com.sangwon.example.bookapp.Item.BookItem
-import com.sangwon.example.bookapp.Item.BookTheme
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -42,18 +40,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
 
         listview.adapter = adapter
 
-        callBookList()
         setListener()
         setThemeRecyclerView()
     }
 
     private fun setThemeRecyclerView() {
         val icons = arrayListOf<Int>(
-            R.drawable.baseline_account_circle_24,
-            R.drawable.baseline_home_24,
-            R.drawable.baseline_map_24,
-            R.drawable.baseline_search_24,
-            R.drawable.baseline_add_24,
+            R.drawable.fairytale,
+            R.drawable.magazine,
+            R.drawable.novel,
+            R.drawable.poet,
+            R.drawable.humanities,
             R.drawable.baseline_notifications_none_24
         )
         val themes = arrayListOf<String>("동화", "잡지", "소설", "시", "인문학", "비문학")
@@ -187,7 +184,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                             totalHeight = listItem.measuredHeight * adapter.count
 
                             val params: ViewGroup.LayoutParams = listview.layoutParams
-                            params.height = totalHeight + listview.dividerHeight * (adapter.count - 1)
+                            params.height = totalHeight + listview.dividerHeight * adapter.count
                             listview.layoutParams = params
                             listview.requestLayout()
                         }
@@ -196,7 +193,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                     }
                 }
             }
-
         }
     }
 

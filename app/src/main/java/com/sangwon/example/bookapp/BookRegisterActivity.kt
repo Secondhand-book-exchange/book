@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -14,12 +13,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.sangwon.example.bookapp.databinding.ActivityBookRegisterBinding
-import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import kotlin.properties.Delegates
 
 class BookRegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookRegisterBinding
