@@ -23,6 +23,14 @@ data class User(
     val phoneNumber: String = ""
 )
 
+
+data class Message(
+    var message: String?,
+    var sendId: String?
+){
+    constructor():this("","")
+}
+
 class Model {
     var imageUrl: String? = null
 
