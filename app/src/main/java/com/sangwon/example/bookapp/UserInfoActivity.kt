@@ -55,7 +55,7 @@ class UserInfoActivity : AppCompatActivity() {
             openGallery()
         }
 
-        // 저장 버튼 클릭 시 수정된 정보를 MyPageActivity로 돌려주기
+        // 저장 버튼 클릭 시 수정된 정보와 프로필 사진을 MyPageActivity로 돌려주기
         binding.saveButton.setOnClickListener {
             val newName = binding.nameEditText.text.toString()
             val newPhoneNumber = binding.phoneNumberEditText.text.toString()
@@ -86,18 +86,65 @@ class UserInfoActivity : AppCompatActivity() {
         db.collection("users").document(userId)
             .update(userUpdates)
             .addOnSuccessListener {
-                Toast.makeText(this, "사용자 정보가 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
-
-                // 수정된 정보를 MyPageActivity로 돌려주기
-                val resultIntent = Intent()
-                resultIntent.putExtra("userName", newName)
-                resultIntent.putExtra("phoneNumber", newPhoneNumber)
-                setResult(RESULT_CODE_SUCCESS, resultIntent)
-                finish()
+                // 프로필 사진을 업로드하고 URL을 가져옴
+                imageUri?.let { uri ->
+                    uploadProfileImage(userId, uri, newName, newPhoneNumber)
+                } ?: run {
+                    // 프로필 사진을 선택하지 않은 경우 바로 돌려주기
+                    returnUserInfo(newName, newPhoneNumber)
+                }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "사용자 정보 업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun uploadProfileImage(userId: String, uri: Uri, newName: String, newPhoneNumber: String) {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val profileImageRef = storageRef.child("profile_images").child(userId)
+
+        profileImageRef.putFile(uri)
+            .addOnSuccessListener {
+                // 프로필 사진 업로드 성공 후, URL을 가져와서 사용자 정보를 업데이트
+                profileImageRef.downloadUrl
+                    .addOnSuccessListener { downloadUri ->
+                        val imageUrl = downloadUri.toString()
+                        val userUpdatesWithImage = hashMapOf<String, Any>(
+                            "name" to newName,
+                            "phoneNumber" to newPhoneNumber,
+                            "profileImageUrl" to imageUrl
+                        )
+
+                        // 사용자 정보 업데이트
+                        FirebaseFirestore.getInstance().collection("users").document(userId)
+                            .update(userUpdatesWithImage)
+                            .addOnSuccessListener {
+                                // 수정된 정보와 프로필 사진 URL을 MyPageActivity로 돌려주기
+                                returnUserInfo(newName, newPhoneNumber, imageUrl)
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "사용자 정보 업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "프로필 사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "프로필 사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun returnUserInfo(newName: String, newPhoneNumber: String, imageUrl: String? = null) {
+        // 수정된 정보와 프로필 사진 URL을 MyPageActivity로 돌려주기
+        val resultIntent = Intent()
+        resultIntent.putExtra("userName", newName)
+        resultIntent.putExtra("phoneNumber", newPhoneNumber)
+        imageUrl?.let {
+            resultIntent.putExtra("profileImageUrl", it)
+        }
+        setResult(RESULT_CODE_SUCCESS, resultIntent)
+        finish()
     }
 
     private fun openGallery() {
@@ -106,5 +153,4 @@ class UserInfoActivity : AppCompatActivity() {
         galleryIntent.type = "image/*"
         galleryLauncher.launch(galleryIntent)
     }
-
 }

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,7 +65,7 @@ class MyPageActivity : AppCompatActivity() {
                         // 사용자 정보를 UI에 설정
                         binding.usernameTextView.text = it.name
                         binding.userEmailTextView.text = it.userId
-                        binding.PhoneNumberTextView.text = it.phoneNumber
+                        binding.PhoneNumberTextView.text = it.phoneNumber.replace("(^","$1-$2-$3")
                     }
                 } else {
                     Log.d(TAG, "No such document")
@@ -76,6 +78,7 @@ class MyPageActivity : AppCompatActivity() {
 
     private fun logout() {
         auth.signOut() // Firebase 로그아웃
+        GoogleSignIn.getClient(this, GoogleSignInOptions.Builder().build()).revokeAccess()
 
         // LoginActivity로 이동
         val intent = Intent(this, LoginActivity::class.java)
