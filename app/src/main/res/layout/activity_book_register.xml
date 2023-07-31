@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,21 +8,21 @@
         android:id="@+id/BookTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="책 이름"/>
+        android:hint="책 이름" />
 
     <EditText
         android:id="@+id/Author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="저자"/>
+        android:hint="저자" />
 
     <EditText
         android:id="@+id/ISBN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="ISBN"/>
+        android:hint="ISBN" />
 
     <ImageView
         android:id="@+id/BookImage"
@@ -40,29 +39,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="거래 동네"/>
+        android:hint="거래 동네" />
 
-    <EditText
+    <Spinner
         android:id="@+id/BookStatus"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="책 상태(양심)"
-        />
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp" />
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+        </RadioGroup>
+
+    </ScrollView>
 
     <EditText
         android:id="@+id/Subscript"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="내용"
-        />
+        android:layout_marginTop="8dp"
+        android:hint="내용" />
 
     <Button
         android:id="@+id/RegisterBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="등록하기"/>
+        android:text="등록하기" />
 
 </LinearLayout>

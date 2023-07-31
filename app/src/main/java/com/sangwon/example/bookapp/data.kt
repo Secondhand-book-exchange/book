@@ -1,5 +1,6 @@
 package com.sangwon.example.bookapp
 
+import android.net.Uri
 import java.util.Date
 
 data class Posts(
@@ -15,6 +16,22 @@ data class Posts(
     val Category : String? =null
 
 )
+data class BookItem(val Img: Uri,
+                    val BookTitle:String,
+                    val Author:String,
+                    val Date:String,
+                    val BookStatus:String,
+                    val Subscript:String,
+                    val Locate:String,
+                    val Category:String,
+                    val type:Int)
+{
+    fun type():Boolean{
+        return type == 1
+    }
+}
+
+data class BookTheme(val icon:Int, val theme:String)
 
 data class User(
     val name: String = "",
