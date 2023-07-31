@@ -2,7 +2,6 @@ package com.sangwon.example.bookapp.Adapter
 
 import android.content.Context
 import android.graphics.Color
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,11 +46,11 @@ class BookListAdapter : BaseAdapter() {
         view.findViewById<TextView>(R.id.note).text = items[position].Subscript
         val type = view.findViewById<TextView>(R.id.type)
         if (items[position].type()) {
-            type.text = "판매중"
-            type.setTextColor(Color.GREEN)
-        } else {
             type.text = "판매 완료"
             type.setTextColor(Color.RED)
+        } else {
+            type.text = "판매중"
+            type.setTextColor(Color.GREEN)
         }
 
         return view
