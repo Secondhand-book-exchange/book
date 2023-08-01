@@ -6,7 +6,7 @@ import java.util.Date
 data class Posts(
     val BookTitle: String? = null,
     val Author:String? = null,
-    val BookStatus: Int? = null,
+    val BookStatus: String? = null,
     val Subscript: String? = null,
     val Image: String? = null,
     val IsSale: Int? = null,
