@@ -3,20 +3,15 @@ package com.sangwon.example.bookapp
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.sangwon.example.bookapp.Adapter.BookListAdapter
 import com.sangwon.example.bookapp.Adapter.ThemeAdapter
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnItemClickListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var themeAdapter: ThemeAdapter
-    var db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +20,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
 
         FirebaseApp.initializeApp(this)
         setListener()
-        setThemeRecyclerView()
+        setCategoryRecyclerView()
     }
 
     override fun onResume() {
@@ -38,8 +33,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
     override fun onClick(v: View?) {
         when (v?.id) {
             binding.profileImage.id -> startActivity(Intent(this, MyPageActivity::class.java))
-            binding.themesBtn.id -> {}
-            binding.bookBtn.id -> {}
+            binding.themesBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
+            binding.bookBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
             binding.menuBtn.id -> {}
         }
     }
@@ -57,29 +52,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
              */
             when (item.itemId) {
                 R.id.home -> {
-                    false
                 }
-
                 R.id.search -> {
                     startActivity(Intent(this, SearchActivity::class.java))
-                    false
                 }
-
                 R.id.map -> {
                     startActivity(Intent(this, BookRegisterActivity::class.java))
-                    false
                 }
-
                 R.id.notification -> {
-                    false
                 }
-
-                else -> false
             }
+            false
         }
     }
 
-    private fun setThemeRecyclerView() {
+    private fun setCategoryRecyclerView() {
         val icons = arrayListOf<Int>(
             R.drawable.fairytale,
             R.drawable.magazine,
@@ -88,7 +75,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             R.drawable.humanities,
             R.drawable.baseline_notifications_none_24
         )
-        val themes = arrayListOf<String>("동화", "잡지", "소설", "시", "인문학", "비문학")
+        val themes = resources.getStringArray(R.array.category)
         val spacingInPixel = resources.getDimensionPixelSize(R.dimen.single_theme_margin)
         binding.displayThemes.addItemDecoration(ThemeAdapter.HorizontalItemDecoration(spacingInPixel))
         binding.displayThemes.layoutManager =

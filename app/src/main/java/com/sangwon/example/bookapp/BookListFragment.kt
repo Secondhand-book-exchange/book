@@ -97,7 +97,7 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                             BookStatus = bookStatus ?: "",
                             Subscript = subscript ?: "",
                             Date = "",
-                            Locate = "",
+                            Locate = locate ?: "",
                             Category = category ?: "",
                             type = isSale,
                         )
@@ -117,12 +117,14 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                                     View.MeasureSpec.AT_MOST
                                 )
 
+                            Log.d("locate2","why not")
+
                             val listItem: View = adapter.getView(0, null, view)
                             listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
                             val totalHeight = listItem.measuredHeight * adapter.count
 
                             val params: ViewGroup.LayoutParams = view.layoutParams
-                            params.height = totalHeight + view.dividerHeight * adapter.count
+                            params.height = totalHeight + view.dividerHeight * (adapter.count + 1)
                             view.layoutParams = params
                             view.requestLayout()
                         }
