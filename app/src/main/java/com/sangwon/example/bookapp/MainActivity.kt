@@ -35,6 +35,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        supportActionBar?.hide()
+
         FirebaseApp.initializeApp(this)
         listview = binding.bookList
         adapter = BookListAdapter()
