@@ -52,7 +52,7 @@ class BookRegisterActivity : AppCompatActivity() {
             BookTitle = binding.BookTitle.text.toString()
             Author = binding.Author.text.toString()
             Location = binding.Location.text.toString()
-            BookStatus = binding.BookStatus.toString()
+            BookStatus = binding.BookStatus.text.toString()
             Subscript = binding.Subscript.text.toString()
 
 
