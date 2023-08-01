@@ -68,6 +68,10 @@ class BookRegisterActivity : AppCompatActivity() {
             galleryIntent.type = "image/*"
             startActivityForResult(galleryIntent, 1)
         }
+        binding.Location.setOnClickListener{
+            val galleryIntent = Intent(this, SelectAreaActivity::class.java)
+            startActivityForResult(galleryIntent, 2)
+        }
         val spinnerAdapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
@@ -103,6 +107,9 @@ class BookRegisterActivity : AppCompatActivity() {
             binding.BookImage.setBackgroundResource(0)
             binding.BookImage.setImageURI(imageUri)
 
+        }else if (requestCode == 2 && resultCode == RESULT_OK && data != null){
+            Location = data.getStringExtra("location").toString()
+            binding.Location.text = Location
         }
     }
 
