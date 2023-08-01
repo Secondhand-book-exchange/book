@@ -29,6 +29,13 @@
         android:layout_marginBottom="8dp" />
 
     <Button
+        android:id="@+id/loginForGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="구글로 로그인" />
+
+    <Button
         android:id="@+id/signupButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,12 +43,3 @@
 
 </LinearLayout>
 
-    <Button
-        android:id="@+id/post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="책등록"/>

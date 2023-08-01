@@ -25,13 +25,14 @@
         android:hint="ISBN" />
 
     <ImageView
-        android:id="@+id/imageViewBookCover"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/BookImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:background="@drawable/ic_book_cover_placeholder"
-        android:contentDescription="책 표지 이미지" />
+        android:background="@drawable/imageadd"
+        android:scaleType="fitXY"
+        android:contentDescription="책 표지 이미지"/>
 
     <EditText
         android:id="@+id/Location"
@@ -47,7 +48,7 @@
         android:layout_marginTop="8dp" />
 
 
-    <ScrollView
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -55,11 +56,12 @@
             android:id="@+id/category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
         </RadioGroup>
 
-    </ScrollView>
+    </HorizontalScrollView>
 
     <EditText
         android:id="@+id/Subscript"
