@@ -1,6 +1,5 @@
 package com.sangwon.example.bookapp
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,9 +23,10 @@ import kotlinx.coroutines.withContext
 /**
  * A fragment representing a list of Items.
  */
-class BookListFragment: Fragment(), AdapterView.OnItemClickListener {
+class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
     private val adapter = BookListAdapter()
-
+    private var keyword = ""
+    private var category = ""
     private var columnCount = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +67,7 @@ class BookListFragment: Fragment(), AdapterView.OnItemClickListener {
 
             for (document in result) {
                 val bookTitle = document.getString("bookTitle")
+                Log.e("title", "bookTitle: $bookTitle")
                 val author = document.getString("author")
                 val bookStatus = document.getString("bookStatus")
                 // val id = document.id 이거 왜 필요했지??
@@ -105,7 +106,8 @@ class BookListFragment: Fragment(), AdapterView.OnItemClickListener {
                         // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
                         if (postItems.size == result.size()) {
                             for (item in postItems) {
-                                adapter.addBook(item)
+                                if (item.BookTitle.contains(keyword))
+                                    adapter.addBook(item)
                             }
                             adapter.notifyDataSetChanged()
 
@@ -141,6 +143,14 @@ class BookListFragment: Fragment(), AdapterView.OnItemClickListener {
         intent.putExtra("Author", item.Author)
         intent.putExtra("Subscript", item.Subscript)
         startActivity(intent)
+    }
+
+    fun setKeyword(keyword: String) {
+        this.keyword = keyword
+    }
+
+    fun setCategory(category: String) {
+        this.category = category
     }
 
     companion object {

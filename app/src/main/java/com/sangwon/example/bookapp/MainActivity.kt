@@ -17,26 +17,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var themeAdapter: ThemeAdapter
     var db = Firebase.firestore
-    private lateinit var imagePath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         supportActionBar?.hide()
 
         FirebaseApp.initializeApp(this)
         setListener()
         setThemeRecyclerView()
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.list, BookListFragment()).commitAllowingStateLoss()
     }
 
     override fun onResume() {
         super.onResume()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.list, BookListFragment()).commitAllowingStateLoss()
+            .replace(R.id.list, BookListFragment())
+            .commitAllowingStateLoss()
     }
 
     override fun onClick(v: View?) {
@@ -105,84 +101,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         themeAdapter.notifyDataSetChanged()
         themeAdapter.setOnItemClickListener(this)
     }
-
-
-    /*
-        private fun callBookList() {
-            GlobalScope.launch(Dispatchers.Main) {
-                val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
-
-                val result = withContext(Dispatchers.IO) {
-                    db.collection("Posts")
-                        .orderBy("timestamp", Query.Direction.DESCENDING)
-                        .get()
-                        .await()
-                }
-
-                for (document in result) {
-                    val bookTitle = document.getString("bookTitle")
-                    val author = document.getString("author")
-                    val bookStatus = document.getString("bookStatus")
-                    // val id = document.id 이거 왜 필요했지??
-                    //내가 쓰려고 가져 왔다가 안 썼나바
-                    val time = document.getTimestamp("timestamp")
-                    // 나중에 time에서 Date 뽑아내기
-                    val locate = document.getString("locate")
-                    val subscript = document.getString("subscript")
-                    imagePath = document.getString("image").toString()
-                    val isSale = document.getLong("isSale")!!.toInt()
-                    val category = document.getString("category")
-                    // 이미지를 등록하지 않은 경우 default 이미지
-                    if (imagePath == "") {
-                        imagePath = "images/default.png"
-                    }
-                    val firebaseStorage = FirebaseStorage.getInstance()
-
-                    val storageReference = firebaseStorage.reference.child(imagePath)
-
-                    storageReference.downloadUrl.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val imageData = task.result
-                            val postItem = BookItem(
-                                Img = imageData,
-                                BookTitle = bookTitle ?: "",
-                                Author = author ?: "",
-                                BookStatus = bookStatus ?: "",
-                                Subscript = subscript ?: "",
-                                Date = "",
-                                Locate = "",
-                                Category = category ?: "",
-                                type = isSale,
-                            )
-                            postItems.add(postItem)
-
-                            // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
-                            if (postItems.size == result.size()) {
-                                for (item in postItems) {
-                                    adapter.addBook(item)
-                                }
-                                adapter.notifyDataSetChanged()
-
-                                val desiredWidth =
-                                    View.MeasureSpec.makeMeasureSpec(listview.width, View.MeasureSpec.AT_MOST)
-
-                                val listItem: View = adapter.getView(0, null, listview)
-                                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
-                                val totalHeight = listItem.measuredHeight * adapter.count
-
-                                val params: ViewGroup.LayoutParams = listview.layoutParams
-                                params.height = totalHeight + listview.dividerHeight * adapter.count
-                                listview.layoutParams = params
-                                listview.requestLayout()
-                            }
-                        } else {
-                            Log.e("downloadUrl", "failed..")
-                        }
-                    }
-                }
-            }
-        }
-    */
 
     override fun onItemClick(view: View, pos: Int) {
         val intent = Intent(this, BookListActivity::class.java)

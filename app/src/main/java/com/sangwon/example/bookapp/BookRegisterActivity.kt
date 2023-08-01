@@ -29,7 +29,7 @@ class BookRegisterActivity : AppCompatActivity() {
     private lateinit var BookTitle: String
     private lateinit var Author: String
     private lateinit var Location: String
-    private var BookStatus: Int = 0
+    private lateinit var BookStatus: String
     private lateinit var Subscript: String
     private lateinit var Category: String
     private var IsSale: Int = 1
@@ -52,7 +52,7 @@ class BookRegisterActivity : AppCompatActivity() {
             BookTitle = binding.BookTitle.text.toString()
             Author = binding.Author.text.toString()
             Location = binding.Location.text.toString()
-            BookStatus = binding.BookStatus.selectedItemId.toInt()
+            BookStatus = binding.BookStatus.selectedItem.toString()
             Subscript = binding.Subscript.text.toString()
 
 
@@ -83,7 +83,7 @@ class BookRegisterActivity : AppCompatActivity() {
             rg.addView(rbtn)
         }
         rg.setOnCheckedChangeListener { _, id ->
-            Category = spinnerAdapter.getItem(id).toString()
+            Category = resources.getStringArray(R.array.category)[id]
         }
     }
 
