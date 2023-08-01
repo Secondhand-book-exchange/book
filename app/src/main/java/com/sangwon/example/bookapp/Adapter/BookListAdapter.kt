@@ -36,7 +36,7 @@ class BookListAdapter : BaseAdapter() {
         }
 
 
-        val iconImageView:ImageView = view.findViewById<ImageView>(R.id.bookImage)
+        val iconImageView:ImageView = view.findViewById<ImageView>(R.id.bookCover)
         Glide.with(context!!)
             .load(items[position].Img)
             .into(iconImageView)
