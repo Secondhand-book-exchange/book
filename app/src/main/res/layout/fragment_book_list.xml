@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list"
+    android:name="com.sangwon.example.bookapp.BookListFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"/>
+    <!--app:layoutManager="LinearLayoutManager"
+    tools:context=".BookRecyclerFragment"
+    tools:listitem="@layout/fragment_book_list" />-->

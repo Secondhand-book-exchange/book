@@ -2,12 +2,15 @@ package com.sangwon.example.bookapp
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.webkit.MimeTypeMap
+import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -23,12 +26,13 @@ class BookRegisterActivity : AppCompatActivity() {
     val db = Firebase.firestore
     private lateinit var imageUri: Uri
     val auth = Firebase.auth
-    private lateinit var BookTitle  : String
-    private lateinit var Author : String
-    private lateinit var Location : String
-    private lateinit var BookStatus : String
-    private lateinit var Subscript : String
-    private var IsSale by Delegates.notNull<Boolean>()
+    private lateinit var BookTitle: String
+    private lateinit var Author: String
+    private lateinit var Location: String
+    private lateinit var BookStatus: String
+    private lateinit var Subscript: String
+    private lateinit var Category: String
+    private var IsSale: Int = 1
 
 
     val user = auth.currentUser
@@ -37,6 +41,8 @@ class BookRegisterActivity : AppCompatActivity() {
 
     var storage = Firebase.storage
     var storageRef = storage.reference
+
+    val timestamp = Timestamp.now()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBookRegisterBinding.inflate(layoutInflater)
@@ -46,15 +52,12 @@ class BookRegisterActivity : AppCompatActivity() {
             BookTitle = binding.BookTitle.text.toString()
             Author = binding.Author.text.toString()
             Location = binding.Location.text.toString()
-            BookStatus = binding.BookStatus.toString()
+            BookStatus = binding.BookStatus.selectedItem.toString()
             Subscript = binding.Subscript.text.toString()
-            IsSale = false
+
 
 
             uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야?
-
-
-
 
 
         }
@@ -65,10 +68,29 @@ class BookRegisterActivity : AppCompatActivity() {
             galleryIntent.type = "image/*"
             startActivityForResult(galleryIntent, 1)
         }
+        binding.Location.setOnClickListener{
+            val galleryIntent = Intent(this, SelectAreaActivity::class.java)
+            startActivityForResult(galleryIntent, 2)
+        }
+        val spinnerAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            resources.getStringArray(R.array.status)
+        )
+        binding.BookStatus.adapter = spinnerAdapter
+        binding.BookStatus.setSelection(0)
 
-
-
+        val rg = binding.category
+        for (v: String in resources.getStringArray(R.array.category)) {
+            val rbtn = RadioButton(this)
+            rbtn.text = v
+            rg.addView(rbtn)
+        }
+        rg.setOnCheckedChangeListener { _, id ->
+            Category = resources.getStringArray(R.array.category)[id]
+        }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -85,8 +107,12 @@ class BookRegisterActivity : AppCompatActivity() {
             binding.BookImage.setBackgroundResource(0)
             binding.BookImage.setImageURI(imageUri)
 
+        }else if (requestCode == 2 && resultCode == RESULT_OK && data != null){
+            Location = data.getStringExtra("location").toString()
+            binding.Location.text = Location
         }
     }
+
     // Upload the image to Firestore
     private fun uploadToFirestore(imageUri: Uri) {
         val imageName = System.currentTimeMillis().toString() + "." + getFileExtension(imageUri)
@@ -107,13 +133,14 @@ class BookRegisterActivity : AppCompatActivity() {
                 val Post = Posts(
                     BookTitle,
                     Author,
-                    Location,
                     BookStatus,
                     Subscript,
                     imagePath,
                     IsSale,
                     user!!.uid,
-                    null,
+                    Location,
+                    timestamp,
+                    Category,
                 )
 
                 // 데이터베이스에 추가하는 코드는 여기에 작성하면 됩니다.
@@ -126,7 +153,7 @@ class BookRegisterActivity : AppCompatActivity() {
                         Log.w("db", "Error adding document", e)
                     }
 
-                Toast.makeText(this@BookRegisterActivity,"업로드 성공",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@BookRegisterActivity, "업로드 성공", Toast.LENGTH_SHORT).show()
                 // 작업 완료
                 finish()
             } catch (e: Exception) {

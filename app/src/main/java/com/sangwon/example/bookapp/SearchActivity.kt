@@ -8,14 +8,13 @@ import com.sangwon.example.bookapp.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding:ActivitySearchBinding
-    lateinit var adapter: BookListAdapter
+    private lateinit var list:BookListFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = BookListAdapter()
-        binding.searchBookList.adapter = adapter
+        list = BookListFragment()
 
         binding.searchBtn.setOnClickListener(this)
     }
@@ -24,6 +23,8 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             binding.searchBtn.id -> {
                 val searchKeyWord = binding.searchText.text.toString()
+                list.setKeyword(searchKeyWord)
+                supportFragmentManager.beginTransaction().replace(binding.list.id, list).commit()
             }
         }
     }

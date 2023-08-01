@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category">
+        <item>동화</item>
+        <item>잡지</item>
+        <item>소설</item>
+        <item>동화</item>
+        <item>시</item>
+        <item>인문학</item>
+        <item>비문학</item>
+    </string-array>
+    <string-array name="status">
+        <item>S급(상태가 매우 좋아 손을 탄 흔적이 전혀 없음)</item>
+        <item>A급(상태가 매우 좋으며 한 번 정도 읽은 흔적이 있다)</item>
+        <item>B급(휘거나 접히거나 구겨진 페이지가 4장 이상이다)</item>
+        <item>C급(책이 낡았고, 표지가 손상되어 있다)</item>
+        <item>D급(책이 헤지고, 구매자의 반환 가능성이 있음)</item>
+        <item>고서</item>
+        <item>책 아님</item>
+    </string-array>
+</resources>
