@@ -16,7 +16,7 @@
         <ImageButton
             android:id="@+id/menuBtn"
             android:layout_width="40dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:background="#0fff"
             android:scaleType="fitXY"
@@ -31,9 +31,8 @@
 
             <ImageView
                 android:id="@+id/profileImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/baseline_account_circle_24" />
@@ -43,7 +42,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/profileImage"
-                android:layout_weight="4"
                 android:orientation="vertical">
                 <!-- 마이페이지로 넘어갈 버튼 -->
                 <TextView
@@ -60,7 +58,7 @@
                     android:layout_below="@id/basicText"
                     android:text="nickName 님"
                     android:textColor="#000"
-                    android:textSize="25sp" />
+                    android:textSize="24sp" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
@@ -118,10 +116,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textColor="#000"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:text="장르별 보기"
-                    android:textSize="25sp"/>
+                    android:textStyle="bold"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
 
                 <Button
                     android:id="@+id/themesBtn"
@@ -151,10 +153,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:text="최근본 서적"
+                    android:textStyle="bold"
                     android:textColor="#000"
-                    android:textSize="25sp"/>
+                    android:textSize="22sp" />
 
                 <Button
                     android:id="@+id/bookBtn"
@@ -175,4 +181,15 @@
                 android:layout_below="@id/bookText" />
         </RelativeLayout>
     </ScrollView>
+    <!--
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/toolbar_header">
+    </com.google.android.material.navigation.NavigationView>
+    -->
 </RelativeLayout>

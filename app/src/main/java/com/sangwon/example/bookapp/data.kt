@@ -27,7 +27,7 @@ data class BookItem(val Img: Uri,
                     val type:Int)
 {
     fun type():Boolean{
-        return type == 1
+        return type == 0
     }
 }
 

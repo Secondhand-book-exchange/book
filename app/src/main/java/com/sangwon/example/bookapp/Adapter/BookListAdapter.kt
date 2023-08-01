@@ -2,6 +2,7 @@ package com.sangwon.example.bookapp.Adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,14 +37,17 @@ class BookListAdapter : BaseAdapter() {
         }
 
 
-        val iconImageView:ImageView = view.findViewById<ImageView>(R.id.bookCover)
+        val iconImageView:ImageView = view.findViewById(R.id.bookCover)
         Glide.with(context!!)
             .load(items[position].Img)
             .into(iconImageView)
 
 
         view.findViewById<TextView>(R.id.title).text = items[position].BookTitle
-        view.findViewById<TextView>(R.id.note).text = items[position].Subscript
+        Log.d("locate", items[position].Locate)
+        view.findViewById<TextView>(R.id.locate).text = items[position].Locate.split(" ")[2]
+        view.findViewById<TextView>(R.id.author).text = items[position].Author
+        view.findViewById<TextView>(R.id.date).text = items[position].Date
         val type = view.findViewById<TextView>(R.id.type)
         if (items[position].type()) {
             type.text = "판매 완료"
