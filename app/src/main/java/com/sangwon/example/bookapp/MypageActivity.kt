@@ -32,6 +32,13 @@ class MyPageActivity : AppCompatActivity() {
 
         title = "                마이페이지"
 
+        val currentUser = auth.currentUser
+        currentUser?.let {
+            // Firebase에서 사용자 정보를 읽어옴
+            val userId = it.uid
+            loadUserInfo(userId)
+        }
+
         binding.editProfileButton.setOnClickListener {
             // 개인정보 수정 화면으로 이동할 때 사용자 정보 전달
             val currentUser = auth.currentUser
@@ -47,12 +54,6 @@ class MyPageActivity : AppCompatActivity() {
             logout()
         }
 
-        val currentUser = auth.currentUser
-        currentUser?.let {
-            // Firebase에서 사용자 정보를 읽어옴
-            val userId = it.uid
-            loadUserInfo(userId)
-        }
     }
 
     private fun loadUserInfo(userId: String) {
