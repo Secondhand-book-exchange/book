@@ -61,3 +61,5 @@ class Model {
         this.imageUrl = imageUrl
     }
 }
+
+data class Chat(val profile:Uri, val receiver:String, val check:Boolean = true, )
