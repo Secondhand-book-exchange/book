@@ -73,9 +73,7 @@ class BookRegisterActivity : AppCompatActivity() {
 
 
 
-            uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야?
-
-
+            uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야? 아니 그냥 튕기던데
         }
 
         binding.BookImage.setOnClickListener {
