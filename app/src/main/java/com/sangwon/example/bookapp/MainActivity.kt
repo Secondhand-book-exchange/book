@@ -39,7 +39,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         }
     }
 
-    private fun setListener() {
+
+
+    private fun setListener(){
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
         binding.profileImage.setOnClickListener(this)
         binding.themesBtn.setOnClickListener(this)
@@ -85,9 +87,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         for (i in 0 until icons.size) {
             themeAdapter.add(BookTheme(icons[i], themes[i]))
         }
-        themeAdapter.notifyDataSetChanged()
-        themeAdapter.setOnItemClickListener(this)
     }
+
 
     override fun onItemClick(view: View, pos: Int) {
         val intent = Intent(this, BookListActivity::class.java)

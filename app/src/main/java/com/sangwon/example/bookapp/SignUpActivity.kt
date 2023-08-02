@@ -12,12 +12,9 @@ import com.google.firebase.ktx.Firebase
 import com.sangwon.example.bookapp.databinding.ActivitySignUpBinding
 
 class SignUpActivity : AppCompatActivity() {
-    private var auth: FirebaseAuth? = null
     private lateinit var binding: ActivitySignUpBinding
 
     private lateinit var Name: String
-    private lateinit var ID: String
-    private lateinit var PassWord: String
     private lateinit var PhoneNumber: String
 
     private val db = FirebaseFirestore.getInstance() // Firestore 인스턴스 생성
@@ -26,7 +23,6 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        auth = Firebase.auth
 
         binding.createAccountButton.setOnClickListener {
             createAccount(
@@ -34,21 +30,21 @@ class SignUpActivity : AppCompatActivity() {
                 binding.signupPassword.text.toString()
             )
             Name = binding.signupName.text.toString()
-            ID = binding.signupID.text.toString()
-            PassWord = binding.signupPassword.text.toString()
             PhoneNumber = binding.phoneNumber.text.toString()
         }
     }
 
     private fun createAccount(email: String, password: String) {
+        val auth = Firebase.auth
+
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            auth?.createUserWithEmailAndPassword(email, password)
-                ?.addOnCompleteListener(this) { task ->
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this, "계정 생성 완료.", Toast.LENGTH_SHORT).show()
 
                         // 회원가입이 성공한 경우 사용자 정보를 데이터베이스에 저장
-                        saveUserInfoToDatabase(Name, ID, PassWord, PhoneNumber)
+                        saveUserInfoToDatabase(Name, email, password, PhoneNumber)
 
                         finish() // 가입창 종료
                     } else {

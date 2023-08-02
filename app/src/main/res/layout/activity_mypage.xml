@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -12,13 +13,15 @@
         android:layout_marginBottom="8dp">
 
         <!-- 프로필 이미지 -->
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profileImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/profile"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/Circular"/>
 
         <ImageButton
             android:id="@+id/editProfileButton"

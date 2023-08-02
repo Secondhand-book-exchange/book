@@ -51,14 +51,12 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
         }
         return view
     }
-
     private fun callBookList(view: ListView) {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
 
             val result = withContext(Dispatchers.IO) {
                 val db = Firebase.firestore
-
                 db.collection("Posts")
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
@@ -67,7 +65,6 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
 
             for (document in result) {
                 val bookTitle = document.getString("bookTitle")
-                Log.e("title", "bookTitle: $bookTitle")
                 val author = document.getString("author")
                 val bookStatus = document.getString("bookStatus")
                 // val id = document.id 이거 왜 필요했지??
@@ -79,6 +76,8 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                 var imagePath = document.getString("image").toString()
                 val isSale = document.getLong("isSale")!!.toInt()
                 val category = document.getString("category")
+                val name = document.getString("name")
+                val uid = document.getString("uid")
                 // 이미지를 등록하지 않은 경우 default 이미지
                 if (imagePath == "") {
                     imagePath = "images/default.png"
@@ -86,6 +85,7 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                 val firebaseStorage = FirebaseStorage.getInstance()
 
                 val storageReference = firebaseStorage.reference.child(imagePath)
+
 
                 storageReference.downloadUrl.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -97,9 +97,11 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                             BookStatus = bookStatus ?: "",
                             Subscript = subscript ?: "",
                             Date = "",
-                            Locate = locate ?: "",
+                            Locate = locate?:"",
                             Category = category ?: "",
                             type = isSale,
+                            name = name ?: "",
+                            uid = uid ?: ""
                         )
                         postItems.add(postItem)
 
@@ -112,19 +114,14 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                             adapter.notifyDataSetChanged()
 
                             val desiredWidth =
-                                View.MeasureSpec.makeMeasureSpec(
-                                    view.width,
-                                    View.MeasureSpec.AT_MOST
-                                )
-
-                            Log.d("locate2","why not")
+                                View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.AT_MOST)
 
                             val listItem: View = adapter.getView(0, null, view)
                             listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
                             val totalHeight = listItem.measuredHeight * adapter.count
 
                             val params: ViewGroup.LayoutParams = view.layoutParams
-                            params.height = totalHeight + view.dividerHeight * (adapter.count + 1)
+                            params.height = totalHeight + view.dividerHeight * (adapter.count - 1)
                             view.layoutParams = params
                             view.requestLayout()
                         }
@@ -133,6 +130,7 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                     }
                 }
             }
+
         }
     }
 
@@ -144,6 +142,8 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
         intent.putExtra("BookTitle", item.BookTitle)
         intent.putExtra("Author", item.Author)
         intent.putExtra("Subscript", item.Subscript)
+        intent.putExtra("uid",item.uid)
+        intent.putExtra("name",item.name)
         startActivity(intent)
     }
 
