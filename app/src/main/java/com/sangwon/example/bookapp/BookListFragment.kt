@@ -52,7 +52,7 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
         return view
     }
 
-    private fun callBookList(view: ListView) {
+    /*private fun callBookList(view: view) {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
 
@@ -134,6 +134,87 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                 }
             }
         }
+    }*/
+    private fun callBookList(view: ListView) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
+
+            val result = withContext(Dispatchers.IO) {
+                val db = Firebase.firestore
+                db.collection("Posts")
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+            }
+
+            for (document in result) {
+                val bookTitle = document.getString("bookTitle")
+                val author = document.getString("author")
+                val bookStatus = document.getString("bookStatus")
+                // val id = document.id 이거 왜 필요했지??
+                //내가 쓰려고 가져 왔다가 안 썼나바
+                val time = document.getTimestamp("timestamp")
+                // 나중에 time에서 Date 뽑아내기
+                val locate = document.getString("locate")
+                val subscript = document.getString("subscript")
+                var imagePath = document.getString("image").toString()
+                val isSale = document.getLong("isSale")!!.toInt()
+                val category = document.getString("category")
+                val name = document.getString("name")
+                val uid = document.getString("uid")
+                // 이미지를 등록하지 않은 경우 default 이미지
+                if (imagePath == "") {
+                    imagePath = "images/default.png"
+                }
+                val firebaseStorage = FirebaseStorage.getInstance()
+
+                val storageReference = firebaseStorage.reference.child(imagePath)
+
+
+                storageReference.downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val imageData = task.result
+                        val postItem = BookItem(
+                            Img = imageData,
+                            BookTitle = bookTitle ?: "",
+                            Author = author ?: "",
+                            BookStatus = bookStatus ?: "",
+                            Subscript = subscript ?: "",
+                            Date = "",
+                            Locate = locate?:"",
+                            Category = category ?: "",
+                            type = isSale,
+                            name = name ?: "",
+                            uid = uid ?: ""
+                        )
+                        postItems.add(postItem)
+
+                        // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
+                        if (postItems.size == result.size()) {
+                            for (item in postItems) {
+                                adapter.addBook(item)
+                            }
+                            adapter.notifyDataSetChanged()
+
+                            val desiredWidth =
+                                View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.AT_MOST)
+
+                            val listItem: View = adapter.getView(0, null, view)
+                            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+                            val totalHeight = listItem.measuredHeight * adapter.count
+
+                            val params: ViewGroup.LayoutParams = view.layoutParams
+                            params.height = totalHeight + view.dividerHeight * (adapter.count - 1)
+                            view.layoutParams = params
+                            view.requestLayout()
+                        }
+                    } else {
+                        Log.e("downloadUrl", "failed..")
+                    }
+                }
+            }
+
+        }
     }
 
     //이거 클릭하면 이동하는 해당 게시물 페이지로 이동하는건가?
@@ -144,6 +225,8 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
         intent.putExtra("BookTitle", item.BookTitle)
         intent.putExtra("Author", item.Author)
         intent.putExtra("Subscript", item.Subscript)
+        intent.putExtra("uid",item.uid)
+        intent.putExtra("name",item.name)
         startActivity(intent)
     }
 
