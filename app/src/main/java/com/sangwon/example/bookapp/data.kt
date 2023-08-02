@@ -13,7 +13,9 @@ data class Posts(
     val Uid: String? = null,
     val Locate: String? = null,
     val timestamp: com.google.firebase.Timestamp? = null, //이 자료형 맞나?
-    val Category : String? =null
+    val Category : String? = null,
+
+    val name:String? = null
 
 )
 data class BookItem(val Img: Uri,
@@ -39,6 +41,15 @@ data class User(
     val passWord: String = "",
     val phoneNumber: String = ""
 )
+
+
+data class Message(
+    var message: String?,
+    var sendId: String?,
+    var timestamp: String
+){
+    constructor():this("","","")
+}
 
 class Model {
     var imageUrl: String? = null

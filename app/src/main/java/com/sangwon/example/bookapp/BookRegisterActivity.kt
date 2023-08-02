@@ -26,13 +26,14 @@ class BookRegisterActivity : AppCompatActivity() {
     val db = Firebase.firestore
     private lateinit var imageUri: Uri
     val auth = Firebase.auth
-    private lateinit var BookTitle: String
-    private lateinit var Author: String
-    private lateinit var Location: String
-    private lateinit var BookStatus: String
-    private lateinit var Subscript: String
+    private lateinit var BookTitle  : String
+    private lateinit var Author : String
+    private lateinit var Location : String
+    private lateinit var BookStatus : String
+    private lateinit var Subscript : String
+    private var IsSale : Int = 1
+    private lateinit var name : String
     private lateinit var Category: String
-    private var IsSale: Int = 1
 
 
     val user = auth.currentUser
@@ -47,6 +48,21 @@ class BookRegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBookRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //이름 추가
+        val docRef = db.collection("users").document("${user!!.uid}")
+        // 게시물을 등록하기 전에 이름을 db에 등록하지 않으면 에러남
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    // 문서가 존재하고 데이터를 가져온 경우
+                    name = document.getString("name").toString()
+                    Log.d("TAG", "Name: $name")
+                } else {
+                    // 문서가 없거나 가져오지 못한 경우
+                    Log.d("TAG", "No such document")
+                }
+            }
 
         binding.RegisterBook.setOnClickListener {
             BookTitle = binding.BookTitle.text.toString()
@@ -141,6 +157,7 @@ class BookRegisterActivity : AppCompatActivity() {
                     Location,
                     timestamp,
                     Category,
+                    name
                 )
 
                 // 데이터베이스에 추가하는 코드는 여기에 작성하면 됩니다.

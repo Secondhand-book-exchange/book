@@ -39,7 +39,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         }
     }
 
-    private fun setListener() {
+    //이거 클릭하면 이동하는 해당 게시물 페이지로 이동하는건가?
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val item: BookItem = adapter.getItem(position) as BookItem
+        val intent = Intent(this, BookInfoActivity::class.java)
+        intent.putExtra("BookCover", item.Img.toString())
+        intent.putExtra("BookTitle", item.BookTitle)
+        intent.putExtra("Author", item.Author)
+        intent.putExtra("Subscript", item.Subscript)
+        intent.putExtra("uid",item.uid)
+        intent.putExtra("name",item.name)
+        startActivity(intent)
+    }
+
+    private fun setListener(){
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
         binding.profileImage.setOnClickListener(this)
         binding.themesBtn.setOnClickListener(this)
@@ -84,6 +97,84 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         binding.displayThemes.adapter = themeAdapter
         for (i in 0 until icons.size) {
             themeAdapter.add(BookTheme(icons[i], themes[i]))
+    private fun callBookList() {
+        GlobalScope.launch(Dispatchers.Main) {
+            val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
+
+            val result = withContext(Dispatchers.IO) {
+                db.collection("Posts")
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+            }
+
+            for (document in result) {
+                val bookTitle = document.getString("bookTitle")
+                val author = document.getString("author")
+                val bookStatus = document.getString("bookStatus")
+                // val id = document.id 이거 왜 필요했지??
+                //내가 쓰려고 가져 왔다가 안 썼나바
+                val time = document.getTimestamp("timestamp")
+                // 나중에 time에서 Date 뽑아내기
+                val locate = document.getString("locate")
+                val subscript = document.getString("subscript")
+                imagePath = document.getString("image").toString()
+                val isSale = document.getLong("isSale")!!.toInt()
+                val category = document.getString("category")
+                val name = document.getString("name")
+                val uid = document.getString("uid")
+                // 이미지를 등록하지 않은 경우 default 이미지
+                if (imagePath == "") {
+                    imagePath = "images/default.png"
+                }
+                val firebaseStorage = FirebaseStorage.getInstance()
+
+                val storageReference = firebaseStorage.reference.child(imagePath)
+
+
+                storageReference.downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val imageData = task.result
+                        val postItem = BookItem(
+                            Img = imageData,
+                            BookTitle = bookTitle ?: "",
+                            Author = author ?: "",
+                            BookStatus = bookStatus ?: "",
+                            Subscript = subscript ?: "",
+                            Date = "",
+                            Locate = "",
+                            Category = category ?: "",
+                            type = isSale,
+                            name = name ?: "",
+                            uid = uid ?: ""
+                        )
+                        postItems.add(postItem)
+
+                        // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
+                        if (postItems.size == result.size()) {
+                            for (item in postItems) {
+                                adapter.addBook(item)
+                            }
+                            adapter.notifyDataSetChanged()
+
+                            val desiredWidth =
+                                View.MeasureSpec.makeMeasureSpec(listview.width, View.MeasureSpec.AT_MOST)
+
+                            val listItem: View = adapter.getView(0, null, listview)
+                            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+                            val totalHeight = listItem.measuredHeight * adapter.count
+
+                            val params: ViewGroup.LayoutParams = listview.layoutParams
+                            params.height = totalHeight + listview.dividerHeight * (adapter.count - 1)
+                            listview.layoutParams = params
+                            listview.requestLayout()
+                        }
+                    } else {
+                        Log.e("downloadUrl", "failed..")
+                    }
+                }
+            }
+
         }
         themeAdapter.notifyDataSetChanged()
         themeAdapter.setOnItemClickListener(this)
