@@ -34,7 +34,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun createAccount(email: String, password: String) {
+    private fun createAccount(email: String, password: String) {
         val auth = Firebase.auth
 
         if (email.isNotEmpty() && password.isNotEmpty()) {
@@ -78,11 +78,6 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "회원 정보 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Error saving user information", e)
             }
-    }
-
-    fun setUserInform(name:String, phoneNumber:String) {//(Name, ID, PassWord, PhoneNumber)
-        Name = name
-        PhoneNumber = phoneNumber
     }
 
     companion object {
