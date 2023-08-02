@@ -37,7 +37,8 @@ data class User(
     val name: String = "",
     val userId: String = "",
     val passWord: String = "",
-    val phoneNumber: String = ""
+    val phoneNumber: String = "",
+    val profileImageUrl:String = "",
 )
 
 class Model {
