@@ -10,7 +10,9 @@ data class BookItem(val Img:Uri,
                     val Subscript:String,
                     val Locate:String,
                     val Category:String,
-                    val type:Int)
+                    val type:Int,
+                    val uid:String,
+                    val name:String)
 {
     fun type():Boolean{
         return type == 0

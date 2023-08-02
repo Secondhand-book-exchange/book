@@ -1,6 +1,7 @@
 package com.sangwon.example.bookapp.Adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ class MessageAdapter(private val context: Context, private val messageList : Arr
         //메시지값
         val currentMessage = messageList[position]
 
+        Log.e("uid","${currentMessage.sendId + currentMessage.message}")
         return if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.sendId)){
             send
         }else{

@@ -1,7 +1,5 @@
 package com.sangwon.example.bookapp
 
-import java.util.Date
-
 data class Posts(
     val BookTitle: String? = null,
     val Author:String? = null,
@@ -12,7 +10,9 @@ data class Posts(
     val Uid: String? = null,
     val Locate: String? = null,
     val timestamp: com.google.firebase.Timestamp? = null, //이 자료형 맞나?
-    val Category : String? =null
+    val Category : String? = null,
+
+    val name:String? = null
 
 )
 
@@ -26,9 +26,10 @@ data class User(
 
 data class Message(
     var message: String?,
-    var sendId: String?
+    var sendId: String?,
+    var timestamp: String
 ){
-    constructor():this("","")
+    constructor():this("","","")
 }
 
 class Model {

@@ -4,8 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.sangwon.example.bookapp.Adapter.MessageAdapter
@@ -21,6 +22,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var senderRoom: String //보낸 대화방
 
     private lateinit var messageList: ArrayList<Message>
+    //Listener가 액티비티 종료 후에도 동작하는 것을 막기 위해 삭제 해주기
+    private lateinit var messageListener: ListenerRegistration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +39,11 @@ class ChatActivity : AppCompatActivity() {
         binding.chatRecyclerView.adapter = messageAdapter
 
         //넘어온 데이터 변수에 담기
-//        receiverName = intent.getStringExtra("name").toString()
-//        receiverUid = intent.getStringExtra("uid").toString()
-
-        receiverName = "dondoncham"
-        receiverUid = "PAzVTYJY5fSXbxXHEFWHM5MC9bN2"
+        receiverName = intent.getStringExtra("name").toString()
+        receiverUid = intent.getStringExtra("uid").toString()
+        Log.e("name","${receiverName} + ${receiverUid}")
+//        receiverName = "dondoncham"
+//        receiverUid = "PAzVTYJY5fSXbxXHEFWHM5MC9bN2"
 
         var auth = Firebase.auth // 인증
         var db = Firebase.firestore // DB 객체
@@ -60,7 +63,8 @@ class ChatActivity : AppCompatActivity() {
         //메시지 전송 버튼 이벤트
         binding.sendButton.setOnClickListener{
             val message = binding.messageEdit.text.toString()
-            val messageObject = Message(message, senderUid)
+            val timestamp = Timestamp.now().toString()
+            val messageObject = Message(message, senderUid, timestamp)
 
             // 데이터 저장
             db.collection("Chats").document(senderUid!!)
@@ -74,17 +78,18 @@ class ChatActivity : AppCompatActivity() {
         }
 
         //메시지 가져오기
-        db.collection("Chats").document(senderUid!!)
+        messageListener = db.collection("Chats").document(senderUid!!)
             .collection("${senderRoom}")
+            .orderBy("timestamp")
             .addSnapshotListener { snapshot, e ->
                 if (snapshot != null && !snapshot.isEmpty) {
                    messageList.clear()
 
                     for(document in snapshot.documents){
                         val message = document.getString("message")
-                        val senderUid = document.getString("senderUid")
-
-                        val messageObject = Message(message,senderUid)
+                        val senderUid = document.getString("sendId")
+                        val timestamp = document.getString("timestamp")
+                        val messageObject = Message(message,senderUid,timestamp!!)
                         messageList.add(messageObject)
 
                     }
@@ -94,10 +99,10 @@ class ChatActivity : AppCompatActivity() {
                     Log.e("snapshoterror", "Error getting messages: $e")
                 }
             }
-
-
-
-
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        messageListener.remove()
     }
 
 

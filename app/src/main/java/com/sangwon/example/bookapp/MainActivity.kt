@@ -93,6 +93,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
         intent.putExtra("BookTitle", item.BookTitle)
         intent.putExtra("Author", item.Author)
         intent.putExtra("Subscript", item.Subscript)
+        intent.putExtra("uid",item.uid)
+        intent.putExtra("name",item.name)
         startActivity(intent)
     }
 
@@ -156,6 +158,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 imagePath = document.getString("image").toString()
                 val isSale = document.getLong("isSale")!!.toInt()
                 val category = document.getString("category")
+                val name = document.getString("name")
+                val uid = document.getString("uid")
                 // 이미지를 등록하지 않은 경우 default 이미지
                 if (imagePath == "") {
                     imagePath = "images/default.png"
@@ -163,6 +167,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                 val firebaseStorage = FirebaseStorage.getInstance()
 
                 val storageReference = firebaseStorage.reference.child(imagePath)
+
 
                 storageReference.downloadUrl.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -177,6 +182,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, AdapterView.OnIt
                             Locate = "",
                             Category = category ?: "",
                             type = isSale,
+                            name = name ?: "",
+                            uid = uid ?: ""
                         )
                         postItems.add(postItem)
 
