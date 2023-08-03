@@ -44,8 +44,8 @@ class ChatListAdapter : BaseAdapter() {
             .into(iconImageView)
 
 
-        view.findViewById<TextView>(R.id.name).text = items[position].receiver
-        val check = view.findViewById<TextView>(R.id.check)
+        view.findViewById<TextView>(R.id.name).text = items[position].name
+        val check = view.findViewById<ImageView>(R.id.checked)
         if (items[position].check) {
             check.setBackgroundColor(Color.RED)
         } else {

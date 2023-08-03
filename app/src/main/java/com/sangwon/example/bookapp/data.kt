@@ -1,7 +1,6 @@
 package com.sangwon.example.bookapp
 
 import android.net.Uri
-import java.util.Date
 
 data class Posts(
     val BookTitle: String? = null,
@@ -63,4 +62,4 @@ class Model {
     }
 }
 
-data class Chat(val profile:Uri, val receiver:String, val check:Boolean = true, )
+data class Chat(val profile: Uri, val name:String, val uid:String ,val check:Boolean)

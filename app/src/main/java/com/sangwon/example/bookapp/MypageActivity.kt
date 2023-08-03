@@ -54,10 +54,6 @@ class MyPageActivity : AppCompatActivity() {
             logout()
         }
 
-        binding.chatHistoryButton.setOnClickListener {
-            startActivity(Intent(this, ChatActivity::class.java))
-        }
-
         binding.purchaseHistoryButton.setOnClickListener {
             val intent = Intent(this, BookListActivity::class.java)
             intent.putExtra("type", "purchase")
@@ -68,6 +64,9 @@ class MyPageActivity : AppCompatActivity() {
             val intent = Intent(this, BookListActivity::class.java)
             intent.putExtra("type", "sales")
             startActivity(intent)
+        }
+        binding.chatHistoryButton.setOnClickListener{
+            startActivity(Intent(this,ChatListActivity::class.java))
         }
     }
 
