@@ -27,8 +27,7 @@
             android:id="@+id/editProfileButton"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/right_arrow"
-            android:background="@android:color/transparent"
+            android:background="@drawable/right_arrow"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp" />

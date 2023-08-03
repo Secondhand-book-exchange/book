@@ -29,13 +29,14 @@
             android:layout_toStartOf="@id/menuBtn"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profileImage"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/baseline_account_circle_24" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_account_circle_24"
+                app:shapeAppearanceOverlay="@style/Circular"/>
             <!-- 마이페이지로 넘어갈 버튼 -->
             <RelativeLayout
                 android:id="@+id/profileText"
@@ -108,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             -->
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/themesText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -116,26 +117,26 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:gravity="center_vertical"
                     android:text="장르별 보기"
+                    android:textColor="#000"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="#000"
-                    android:textSize="22sp" />
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/themesBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
-                    android:background="#0000"
-                    android:text=">"
-                    android:textAlignment="textEnd"
-                    android:textColor="#000"
-                    android:textSize="25sp" />
-            </RelativeLayout>
+                    android:background="@drawable/right_arrow"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/displayThemes"
@@ -144,7 +145,7 @@
                 android:layout_below="@id/themesText"
                 android:orientation="horizontal"/>
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bookText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -153,26 +154,26 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="최근본 서적"
+                    android:gravity="center_vertical"
+                    android:text="최근 본 서적"
+                    android:textColor="#000"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="#000"
-                    android:textSize="22sp" />
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/bookBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
-                    android:background="#0000"
-                    android:text=">"
-                    android:textAlignment="textEnd"
-                    android:textColor="#000"
-                    android:textSize="25sp" />
-            </RelativeLayout>
+                    android:background="@drawable/right_arrow"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <FrameLayout
                 android:id="@+id/list"
