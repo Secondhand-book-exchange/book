@@ -52,9 +52,11 @@ class BookListAdapter : BaseAdapter() {
         if (items[position].type()) {
             type.text = "판매 완료"
             type.setTextColor(Color.RED)
+            view.setBackgroundColor(Color.parseColor("#DDDDDD"))
+            iconImageView.alpha=0.6f
         } else {
             type.text = "판매중"
-            type.setTextColor(Color.GREEN)
+            type.setTextColor(Color.parseColor("#157000"))
         }
 
         return view

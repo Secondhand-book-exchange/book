@@ -16,7 +16,6 @@ import com.sangwon.example.bookapp.databinding.ActivityMypageBinding
 class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMypageBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
     private lateinit var profileImageUrl:String
 
     companion object {
@@ -30,15 +29,13 @@ class MyPageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
 
         title = "                마이페이지"
 
         val currentUser = auth.currentUser
         currentUser?.let {
             // Firebase에서 사용자 정보를 읽어옴
-            val userId = it.uid
-            loadUserInfo(userId)
+            loadUserInfo()
         }
 
         binding.editProfileButton.setOnClickListener {
@@ -59,7 +56,9 @@ class MyPageActivity : AppCompatActivity() {
 
     }
 
-    private fun loadUserInfo(userId: String) {
+    private fun loadUserInfo() {
+        val db = FirebaseFirestore.getInstance()
+
         db.collection("users").document(Firebase.auth.currentUser!!.uid)
             .get()
             .addOnSuccessListener { document ->

@@ -2,16 +2,26 @@ package com.sangwon.example.bookapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.sangwon.example.bookapp.Adapter.ThemeAdapter
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnItemClickListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var themeAdapter: ThemeAdapter
+
+    companion object {
+        private const val REQUEST_USER_INFO = 1001
+        private const val TAG = "MainActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +31,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         FirebaseApp.initializeApp(this)
         setListener()
         setCategoryRecyclerView()
+        loadUserInfo()
     }
 
     override fun onResume() {
@@ -38,7 +49,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             binding.menuBtn.id -> {}
         }
     }
-
 
 
     private fun setListener(){
@@ -68,6 +78,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         }
     }
 
+
     private fun setCategoryRecyclerView() {
         val icons = arrayListOf<Int>(
             R.drawable.fairytale,
@@ -94,5 +105,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         val intent = Intent(this, BookListActivity::class.java)
         intent.putExtra("theme", themeAdapter.list[pos].theme)
         startActivity(intent)
+    }
+
+
+    private fun loadUserInfo() {
+        val db = Firebase.firestore
+        db.collection("users").document(Firebase.auth.currentUser!!.uid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val user = document.toObject(User::class.java)
+                    user?.let {
+                        // 사용자 정보를 UI에 설정
+                        binding.nickname.text = it.name
+                        Glide.with(this)
+                            .load(it.profileImageUrl)
+                            .into(binding.profileImage)
+                    }
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
     }
 }
