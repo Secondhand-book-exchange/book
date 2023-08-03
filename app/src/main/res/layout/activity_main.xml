@@ -16,7 +16,7 @@
         <ImageButton
             android:id="@+id/menuBtn"
             android:layout_width="40dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:background="#0fff"
             android:scaleType="fitXY"
@@ -29,21 +29,20 @@
             android:layout_toStartOf="@id/menuBtn"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profileImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/baseline_account_circle_24" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_account_circle_24"
+                app:shapeAppearanceOverlay="@style/Circular"/>
             <!-- 마이페이지로 넘어갈 버튼 -->
             <RelativeLayout
                 android:id="@+id/profileText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/profileImage"
-                android:layout_weight="4"
                 android:orientation="vertical">
                 <!-- 마이페이지로 넘어갈 버튼 -->
                 <TextView
@@ -60,7 +59,7 @@
                     android:layout_below="@id/basicText"
                     android:text="nickName 님"
                     android:textColor="#000"
-                    android:textSize="25sp" />
+                    android:textSize="24sp" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
@@ -73,106 +72,131 @@
         android:background="#bfff"
         app:menu="@menu/footer_menu" />
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mainHead">
-
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp">
-
-            <!--
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Monday" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tuesday" />
-
-            </com.google.android.material.tabs.TabLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recommendBook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            -->
-            <RelativeLayout
-                android:id="@+id/themesText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textColor="#000"
-                    android:text="장르별 보기"
-                    android:textSize="25sp"/>
-
-                <Button
-                    android:id="@+id/themesBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="#0000"
-                    android:text=">"
-                    android:textAlignment="textEnd"
-                    android:textColor="#000"
-                    android:textSize="25sp" />
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/displayThemes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/themesText"
-                android:orientation="horizontal"/>
+            android:layout_height="match_parent">
 
             <RelativeLayout
-                android:id="@+id/bookText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/displayThemes">
+                android:padding="15dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!--
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="최근본 서적"
-                    android:textColor="#000"
-                    android:textSize="25sp"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <Button
-                    android:id="@+id/bookBtn"
-                    android:layout_width="wrap_content"
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Monday" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tuesday" />
+
+                </com.google.android.material.tabs.TabLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendBook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/themesText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="장르별 보기"
+                        android:textColor="#000"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/themesBtn"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/right_arrow"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/displayThemes"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="#0000"
-                    android:text=">"
-                    android:textAlignment="textEnd"
-                    android:textColor="#000"
-                    android:textSize="25sp" />
+                    android:layout_below="@id/themesText"
+                    android:orientation="horizontal"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/bookText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/displayThemes">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="최근 본 서적"
+                        android:textColor="#000"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/bookBtn"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/right_arrow"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <FrameLayout
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bookText" />
             </RelativeLayout>
+        </ScrollView>
 
-            <FrameLayout
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/bookText" />
-        </RelativeLayout>
-    </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <!--
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/toolbar_header">
+    </com.google.android.material.navigation.NavigationView>
+    -->
 </RelativeLayout>

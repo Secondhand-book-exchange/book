@@ -11,10 +11,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.sangwon.example.bookapp.BookItem
+import com.sangwon.example.bookapp.Chat
 import com.sangwon.example.bookapp.R
 
-class BookListAdapter : BaseAdapter() {
-    private val items = ArrayList<BookItem>()
+class ChatListAdapter : BaseAdapter() {
+    private val items = ArrayList<Chat>()
     override fun getCount(): Int {
         return items.size
     }
@@ -33,36 +34,28 @@ class BookListAdapter : BaseAdapter() {
         else {
             val inflate: LayoutInflater =
                 context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            inflate.inflate(R.layout.book_item, parent,false)
+            inflate.inflate(R.layout.chat_item, parent,false)
         }
 
 
-        val iconImageView:ImageView = view.findViewById(R.id.bookCover)
+        val iconImageView:ImageView = view.findViewById(R.id.profile)
         Glide.with(context!!)
-            .load(items[position].Img)
+            .load(items[position].profile)
             .into(iconImageView)
 
 
-        view.findViewById<TextView>(R.id.title).text = items[position].BookTitle
-        Log.d("locate", items[position].Locate)
-        view.findViewById<TextView>(R.id.locate).text = items[position].Locate.split(" ")[2]
-        view.findViewById<TextView>(R.id.author).text = items[position].Author
-        view.findViewById<TextView>(R.id.date).text = items[position].Date
-        val type = view.findViewById<TextView>(R.id.type)
-        if (items[position].type()) {
-            type.text = "판매 완료"
-            type.setTextColor(Color.RED)
-            view.setBackgroundColor(Color.parseColor("#DDDDDD"))
-            iconImageView.alpha=0.6f
+        view.findViewById<TextView>(R.id.name).text = items[position].receiver
+        val check = view.findViewById<TextView>(R.id.check)
+        if (items[position].check) {
+            check.setBackgroundColor(Color.RED)
         } else {
-            type.text = "판매중"
-            type.setTextColor(Color.parseColor("#157000"))
+            check.setBackgroundColor(Color.WHITE)
         }
 
         return view
     }
 
-    fun addBook(item: BookItem) {
+    fun addChat(item: Chat) {
         items.add(item)
     }
 
