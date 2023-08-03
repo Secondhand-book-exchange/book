@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.ktx.auth
@@ -14,7 +15,8 @@ import com.google.firebase.ktx.Firebase
 import com.sangwon.example.bookapp.Adapter.ThemeAdapter
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnItemClickListener,
+    SwipeRefreshLayout.OnRefreshListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var themeAdapter: ThemeAdapter
 
@@ -51,12 +53,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
     }
 
 
-    private fun setListener(){
+    private fun setListener() {
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
         binding.profileImage.setOnClickListener(this)
         binding.themesBtn.setOnClickListener(this)
         binding.bookBtn.setOnClickListener(this)
         binding.menuBtn.setOnClickListener(this)
+
+        binding.swipe.setOnRefreshListener(this)
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             /**
@@ -65,12 +69,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             when (item.itemId) {
                 R.id.home -> {
                 }
+
                 R.id.search -> {
                     startActivity(Intent(this, SearchActivity::class.java))
                 }
+
                 R.id.map -> {
                     startActivity(Intent(this, BookRegisterActivity::class.java))
                 }
+
                 R.id.notification -> {
                 }
             }
@@ -129,5 +136,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             .addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
             }
+    }
+
+    override fun onRefresh() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.list, BookListFragment())
+            .commitAllowingStateLoss()
+        binding.swipe.isRefreshing = false
     }
 }
