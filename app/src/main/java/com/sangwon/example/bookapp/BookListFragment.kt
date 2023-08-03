@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -19,11 +20,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 /**
  * A fragment representing a list of Items.
  */
-class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
+class BookListFragment(private val key: String = "") : Fragment(), AdapterView.OnItemClickListener {
     private val adapter = BookListAdapter()
     private var keyword = ""
     private var category = ""
@@ -51,9 +53,43 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
         }
         return view
     }
+
     private fun callBookList(view: ListView) {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
+            val auth = Firebase.auth.currentUser
+            fun all() {
+                for (item in postItems) {
+                    adapter.addBook(item)
+                }
+            }
+
+            fun sales() {
+                for (item in postItems) {
+                    if (item.uid == auth?.uid && item.type())
+                        adapter.addBook(item)
+                }
+            }
+
+            fun purchase() {
+                for (item in postItems) {
+                    if (item.uid == auth?.uid && !item.type())
+                        adapter.addBook(item)
+                }
+            }
+
+            fun search() {
+                for (item in postItems) {
+                    if (item.BookTitle.contains(keyword))
+                        adapter.addBook(item)
+                }
+            }
+
+            fun category() {
+                for (item in postItems) {
+                    adapter.addBook(item)
+                }
+            }
 
             val result = withContext(Dispatchers.IO) {
                 val db = Firebase.firestore
@@ -64,20 +100,7 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
             }
 
             for (document in result) {
-                val bookTitle = document.getString("bookTitle")
-                val author = document.getString("author")
-                val bookStatus = document.getString("bookStatus")
-                // val id = document.id 이거 왜 필요했지??
-                //내가 쓰려고 가져 왔다가 안 썼나바
-                val time = document.getTimestamp("timestamp")
-                // 나중에 time에서 Date 뽑아내기
-                val locate = document.getString("locate")
-                val subscript = document.getString("subscript")
                 var imagePath = document.getString("image").toString()
-                val isSale = document.getLong("isSale")!!.toInt()
-                val category = document.getString("category")
-                val name = document.getString("name")
-                val uid = document.getString("uid")
                 // 이미지를 등록하지 않은 경우 default 이미지
                 if (imagePath == "") {
                     imagePath = "images/default.png"
@@ -92,45 +115,62 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
                         val imageData = task.result
                         val postItem = BookItem(
                             Img = imageData,
-                            BookTitle = bookTitle ?: "",
-                            Author = author ?: "",
-                            BookStatus = bookStatus ?: "",
-                            Subscript = subscript ?: "",
-                            Date = "",
-                            Locate = locate?:"",
-                            Category = category ?: "",
-                            type = isSale,
-                            name = name ?: "",
-                            uid = uid ?: ""
+                            BookTitle = document.getString("bookTitle") ?: "",
+                            Author = document.getString("author") ?: "",
+                            BookStatus = document.getString("bookStatus") ?: "",
+                            Subscript = document.getString("subscript") ?: "",
+                            Date = document.getTimestamp("timestamp")?.toDate() ?: Date(),
+                            Locate = document.getString("locate") ?: "",
+                            Category = document.getString("category") ?: "",
+                            type = document.getLong("isSale")!!.toInt(),
+                            name = document.getString("name") ?: "",
+                            uid = document.getString("uid") ?: ""
                         )
                         postItems.add(postItem)
 
                         // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
                         if (postItems.size == result.size()) {
-                            for (item in postItems) {
-                                if (item.BookTitle.contains(keyword))
-                                    adapter.addBook(item)
+                            when (key) {
+                                "" ->
+                                    all()
+
+                                "sales" ->
+                                    sales()
+
+                                "purchase" ->
+                                    purchase()
+
+                                "search" ->
+                                    search()
+
+                                "category" ->
+                                    category()
                             }
                             adapter.notifyDataSetChanged()
 
                             val desiredWidth =
-                                View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.AT_MOST)
+                                View.MeasureSpec.makeMeasureSpec(
+                                    view.width,
+                                    View.MeasureSpec.AT_MOST
+                                )
 
-                            val listItem: View = adapter.getView(0, null, view)
-                            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
-                            val totalHeight = listItem.measuredHeight * adapter.count
+                            if (adapter.count > 0) {
+                                val listItem: View = adapter.getView(0, null, view)
+                                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+                                val totalHeight = listItem.measuredHeight * postItems.size
 
-                            val params: ViewGroup.LayoutParams = view.layoutParams
-                            params.height = totalHeight + view.dividerHeight * (adapter.count - 1)
-                            view.layoutParams = params
-                            view.requestLayout()
+                                val params: ViewGroup.LayoutParams = view.layoutParams
+                                params.height =
+                                    totalHeight + view.dividerHeight * (postItems.size - 1)
+                                view.layoutParams = params
+                                view.requestLayout()
+                            }
                         }
                     } else {
                         Log.e("downloadUrl", "failed..")
                     }
                 }
             }
-
         }
     }
 
@@ -142,8 +182,8 @@ class BookListFragment : Fragment(), AdapterView.OnItemClickListener {
         intent.putExtra("BookTitle", item.BookTitle)
         intent.putExtra("Author", item.Author)
         intent.putExtra("Subscript", item.Subscript)
-        intent.putExtra("uid",item.uid)
-        intent.putExtra("name",item.name)
+        intent.putExtra("uid", item.uid)
+        intent.putExtra("name", item.name)
         startActivity(intent)
     }
 
