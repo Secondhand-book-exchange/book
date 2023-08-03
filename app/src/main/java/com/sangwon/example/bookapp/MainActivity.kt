@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         for (i in 0 until icons.size) {
             themeAdapter.add(BookTheme(icons[i], themes[i]))
         }
+        themeAdapter.setOnItemClickListener(this)
     }
 
 

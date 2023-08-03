@@ -5,7 +5,6 @@
     android:name="com.sangwon.example.bookapp.BookListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="10dp"
     android:divider="@null"
     android:dividerHeight="20dp"/>
     <!--app:layoutManager="LinearLayoutManager"
