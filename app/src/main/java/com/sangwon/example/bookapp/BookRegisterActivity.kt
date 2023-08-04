@@ -101,7 +101,7 @@ class BookRegisterActivity : AppCompatActivity() {
             rg.addView(rbtn)
         }
         rg.setOnCheckedChangeListener { _, id ->
-            Category = resources.getStringArray(R.array.category)[id]
+            Category = resources.getStringArray(R.array.category)[id-1]
         }
     }
 
@@ -113,8 +113,6 @@ class BookRegisterActivity : AppCompatActivity() {
 
             // 갤러리에서 사진에 대한 uri줌
             imageUri = data.data!!
-            //Log.e("img","${imageUri}")
-            //content://com.android.providers.media.documents/document/image%3A13
 
 
             // Uri 이미지 뷰에 넣으면 사진 나와
