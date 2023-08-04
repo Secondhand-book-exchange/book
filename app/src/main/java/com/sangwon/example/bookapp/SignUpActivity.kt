@@ -16,6 +16,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var Name: String
     private lateinit var PhoneNumber: String
+    private lateinit var Location : String
 
     private val db = FirebaseFirestore.getInstance() // Firestore 인스턴스 생성
 
@@ -31,6 +32,21 @@ class SignUpActivity : AppCompatActivity() {
             )
             Name = binding.signupName.text.toString()
             PhoneNumber = binding.phoneNumber.text.toString()
+            Location = binding.Location.text.toString()
+        }
+
+        binding.Location.setOnClickListener{
+            val galleryIntent = Intent(this, SelectAreaActivity::class.java)
+            startActivityForResult(galleryIntent, 2)
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 2 && resultCode == RESULT_OK && data != null){
+            Location = data.getStringExtra("location").toString()
+            binding.Location.text = Location
         }
     }
 
@@ -44,7 +60,7 @@ class SignUpActivity : AppCompatActivity() {
                         Toast.makeText(this, "계정 생성 완료.", Toast.LENGTH_SHORT).show()
 
                         // 회원가입이 성공한 경우 사용자 정보를 데이터베이스에 저장
-                        saveUserInfoToDatabase(Name, email, password, PhoneNumber)
+                        saveUserInfoToDatabase(Name, email, password, PhoneNumber, Location)
 
                         finish() // 가입창 종료
                     } else {
@@ -58,9 +74,9 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserInfoToDatabase(Name: String, UserId: String, PassWord: String, PhoneNumber: String) {
+    private fun saveUserInfoToDatabase(Name: String, UserId: String, PassWord: String, PhoneNumber: String, Location: String) {
         // 사용자 정보를 User 객체에 저장
-        val user = User(Name, UserId, PassWord, PhoneNumber)
+        val user = User(Name, UserId, PassWord, PhoneNumber, Location)
 
         // Firestore 데이터베이스에 사용자 정보 저장
         db.collection("users")
