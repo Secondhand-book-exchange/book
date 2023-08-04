@@ -18,4 +18,6 @@
     <color name="beige">#F5F5DC</color>
     <color name="sale">#157000</color>
     <color name="main">#f6f6f6</color>
+    <color name="red">#ff0000</color>
+    <color name="blue">#0000ff</color>
 </resources>

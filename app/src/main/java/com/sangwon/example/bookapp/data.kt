@@ -42,6 +42,7 @@ data class User(
     val userId: String = "",
     val passWord: String = "",
     val phoneNumber: String = "",
+    val location:String = "",
     val profileImageUrl:String = "",
 )
 
