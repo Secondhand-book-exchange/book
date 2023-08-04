@@ -1,6 +1,7 @@
 package com.sangwon.example.bookapp
 
 import android.net.Uri
+import java.util.*
 
 data class Posts(
     val BookTitle: String? = null,
@@ -20,7 +21,7 @@ data class Posts(
 data class BookItem(val Img: Uri,
                     val BookTitle:String,
                     val Author:String,
-                    val Date:Date,
+                    val Date: Date,
                     val BookStatus:String,
                     val Subscript:String,
                     val Locate:String,
