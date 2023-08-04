@@ -34,6 +34,7 @@ class UserInfoActivity : AppCompatActivity() {
                 // 이미지 URI를 가져옴
                 imageUri = it
                 binding.profileImage.setImageURI(imageUri)
+                Log.d("ImageUri", "$imageUri")
             }
         }
     }
@@ -50,9 +51,12 @@ class UserInfoActivity : AppCompatActivity() {
         val profileImage = intent.getStringExtra("profileImage")
         binding.nameEditText.setText(userName)
         binding.phoneNumberEditText.setText(phoneNumber)
-        Glide.with(this)
-            .load(profileImage)
-            .into(binding.profileImage)
+        if (profileImage.isNullOrBlank())
+            binding.profileImage.setBackgroundResource(R.drawable.profile)
+        else
+            Glide.with(this)
+                .load(profileImage)
+                .into(binding.profileImage)
 
         // 프로필 사진을 클릭하면 갤러리에서 사진 선택
         binding.profileImage.setOnClickListener {
@@ -103,7 +107,12 @@ class UserInfoActivity : AppCompatActivity() {
             }
     }
 
-    private fun uploadProfileImage(userId: String, uri: Uri, newName: String, newPhoneNumber: String) {
+    private fun uploadProfileImage(
+        userId: String,
+        uri: Uri,
+        newName: String,
+        newPhoneNumber: String
+    ) {
         val storageRef = FirebaseStorage.getInstance().reference
         val profileImageRef = storageRef.child("profile_images").child(userId)
 
@@ -116,7 +125,6 @@ class UserInfoActivity : AppCompatActivity() {
                         val userUpdatesWithImage = hashMapOf<String, Any>(
                             "name" to newName,
                             "phoneNumber" to newPhoneNumber,
-                            "profileImageUrl" to imageUrl
                         )
 
                         // 사용자 정보 업데이트
@@ -127,7 +135,8 @@ class UserInfoActivity : AppCompatActivity() {
                                 returnUserInfo(newName, newPhoneNumber, imageUrl)
                             }
                             .addOnFailureListener {
-                                Toast.makeText(this, "사용자 정보 업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "사용자 정보 업데이트에 실패했습니다.", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                     }
                     .addOnFailureListener {

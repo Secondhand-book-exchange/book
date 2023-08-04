@@ -12,6 +12,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.bookapp.Adapter.ThemeAdapter
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
@@ -118,7 +119,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
 
     private fun loadUserInfo() {
         val db = Firebase.firestore
-        db.collection("users").document(Firebase.auth.currentUser!!.uid)
+        val currentUser = Firebase.auth.currentUser
+        db.collection("users").document(currentUser!!.uid)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
@@ -126,9 +128,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
                     user?.let {
                         // 사용자 정보를 UI에 설정
                         binding.nickname.text = it.name
-                        Glide.with(this)
-                            .load(it.profileImageUrl)
-                            .into(binding.profileImage)
+                        var imagePath = "profile_images/${currentUser.uid}"
+
+                        val firebaseStorage = FirebaseStorage.getInstance()
+
+                        val storageReference = firebaseStorage.reference.child(imagePath)
+                        storageReference.downloadUrl.addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Glide.with(this)
+                                    .load(task.result)
+                                    .into(binding.profileImage)
+                            }
+                        }
                     }
                 } else {
                     Log.d(TAG, "No such document")

@@ -1,22 +1,25 @@
 package com.sangwon.example.bookapp
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.bookapp.databinding.ActivitySignUpBinding
+import java.io.ByteArrayOutputStream
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
 
     private lateinit var Name: String
     private lateinit var PhoneNumber: String
-    private lateinit var Location : String
+    private lateinit var Location: String
 
     private val db = FirebaseFirestore.getInstance() // Firestore 인스턴스 생성
 
@@ -35,7 +38,7 @@ class SignUpActivity : AppCompatActivity() {
             Location = binding.Location.text.toString()
         }
 
-        binding.Location.setOnClickListener{
+        binding.Location.setOnClickListener {
             val galleryIntent = Intent(this, SelectAreaActivity::class.java)
             startActivityForResult(galleryIntent, 2)
         }
@@ -44,7 +47,7 @@ class SignUpActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 2 && resultCode == RESULT_OK && data != null){
+        if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
             Location = data.getStringExtra("location").toString()
             binding.Location.text = Location
         }
@@ -74,7 +77,13 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserInfoToDatabase(Name: String, UserId: String, PassWord: String, PhoneNumber: String, Location: String) {
+    private fun saveUserInfoToDatabase(
+        Name: String,
+        UserId: String,
+        PassWord: String,
+        PhoneNumber: String,
+        Location: String
+    ) {
         // 사용자 정보를 User 객체에 저장
         val user = User(Name, UserId, PassWord, PhoneNumber, Location)
 
@@ -94,9 +103,25 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "회원 정보 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Error saving user information", e)
             }
-    }
 
-    companion object {
-        private const val TAG = "SignUpActivity"
+        val drawable = getDrawable(R.drawable.profile)
+        val bitmapDrawable = drawable as BitmapDrawable
+        val bitmap = bitmapDrawable.bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        val storageRef = FirebaseStorage.getInstance().reference
+        var uploadTask = storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}").putBytes(data)
+        uploadTask.addOnSuccessListener { Log.d("Firebase Storage", "새 이미지 업로드 성공") }.addOnFailureListener{ exception ->
+            Log.e("Firebase Storage", "새 이미지 업로드 실패: $exception")
+        }
+//
+//        val profileImageRef = storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}")
+//        profileImageRef.putFile(Uri.parse()).addOnFailureListener {
+        }
+
+        companion object {
+            private const val TAG = "SignUpActivity"
+        }
     }
-}

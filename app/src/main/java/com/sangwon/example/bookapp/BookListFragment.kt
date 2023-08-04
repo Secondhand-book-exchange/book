@@ -58,37 +58,34 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
             val auth = Firebase.auth.currentUser
+
             fun all() {
-                for (item in postItems) {
+                for (item in postItems)
                     adapter.addBook(item)
-                }
             }
 
             fun sales() {
-                for (item in postItems) {
+                for (item in postItems)
                     if (item.uid == auth?.uid && item.type())
                         adapter.addBook(item)
-                }
+
             }
 
             fun purchase() {
-                for (item in postItems) {
+                for (item in postItems)
                     if (item.uid == auth?.uid && !item.type())
                         adapter.addBook(item)
-                }
             }
 
             fun search() {
-                for (item in postItems) {
+                for (item in postItems)
                     if (item.BookTitle.contains(keyword))
                         adapter.addBook(item)
-                }
             }
 
             fun category() {
-                for (item in postItems) {
+                for (item in postItems)
                     adapter.addBook(item)
-                }
             }
 
             val result = withContext(Dispatchers.IO) {

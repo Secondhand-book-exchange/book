@@ -43,7 +43,6 @@ data class User(
     val passWord: String = "",
     val phoneNumber: String = "",
     val location:String = "",
-    val profileImageUrl:String = "",
 )
 
 
