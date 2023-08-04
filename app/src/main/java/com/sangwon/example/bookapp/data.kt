@@ -1,7 +1,7 @@
 package com.sangwon.example.bookapp
 
 import android.net.Uri
-import java.util.Date
+import java.util.*
 
 data class Posts(
     val BookTitle: String? = null,
@@ -21,7 +21,7 @@ data class Posts(
 data class BookItem(val Img: Uri,
                     val BookTitle:String,
                     val Author:String,
-                    val Date:String,
+                    val Date: Date,
                     val BookStatus:String,
                     val Subscript:String,
                     val Locate:String,
@@ -63,4 +63,6 @@ class Model {
     }
 }
 
-data class Chat(val profile:Uri, val receiver:String, val check:Boolean = true, )
+data class Chat(val profile: Uri, val name:String, val uid:String, var check:Boolean)
+
+data class ChatRoom(val check:Boolean, val timestamp:String)

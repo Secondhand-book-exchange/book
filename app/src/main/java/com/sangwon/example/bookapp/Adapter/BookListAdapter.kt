@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.sangwon.example.bookapp.BookItem
 import com.sangwon.example.bookapp.R
+import java.text.SimpleDateFormat
 
 class BookListAdapter : BaseAdapter() {
     private val items = ArrayList<BookItem>()
@@ -47,10 +48,10 @@ class BookListAdapter : BaseAdapter() {
         Log.d("locate", items[position].Locate)
         view.findViewById<TextView>(R.id.locate).text = items[position].Locate.split(" ")[2]
         view.findViewById<TextView>(R.id.author).text = items[position].Author
-        view.findViewById<TextView>(R.id.date).text = items[position].Date
+        view.findViewById<TextView>(R.id.date).text = SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분").format(items[position].Date)
         val type = view.findViewById<TextView>(R.id.type)
         if (items[position].type()) {
-            type.text = "판매 완료"
+            type.text = "거레 완료"
             type.setTextColor(Color.RED)
             view.setBackgroundColor(Color.parseColor("#DDDDDD"))
             iconImageView.alpha=0.6f

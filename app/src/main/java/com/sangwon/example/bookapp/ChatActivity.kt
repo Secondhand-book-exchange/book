@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -57,6 +58,16 @@ class ChatActivity : AppCompatActivity() {
         //받는이방
         receiverRoom = senderUid + receiverUid
 
+        //users 정보에 채팅방 정보 추가
+        val userDocumentRef = db.collection("users").document("${auth.currentUser?.uid}")
+        userDocumentRef.update("ChatRoom", FieldValue.arrayUnion(senderRoom))
+            .addOnSuccessListener {
+                db.collection("users").document(receiverUid)
+                    .update("ChatRoom", FieldValue.arrayUnion(receiverRoom))
+            }
+            .addOnFailureListener {
+                Log.e("Fire","배열 필드 업테이드 실패")
+            }
         //액션바에 상대방 이름 보여주기
         supportActionBar?.title = receiverName
 
