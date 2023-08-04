@@ -95,6 +95,10 @@ class ChatListActivity : AppCompatActivity() {
         listview.setOnItemClickListener { parent, view, position, id ->
             // 클릭된 Chat 아이템을 어댑터로부터 가져옵니다
             val chatItem = adapter.getItem(position) as Chat
+            chatItem.check = false
+
+            adapter.notifyDataSetChanged()
+
 
             // 이제, Intent를 사용하여 다음 액티비티로 필요한 데이터(예: chatItem의 uid)를 전달합니다
             val intent = Intent(this, ChatActivity::class.java)

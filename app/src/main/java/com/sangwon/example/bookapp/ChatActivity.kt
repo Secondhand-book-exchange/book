@@ -62,7 +62,6 @@ class ChatActivity : AppCompatActivity() {
         val userDocumentRef = db.collection("users").document("${auth.currentUser?.uid}")
         userDocumentRef.update("ChatRoom", FieldValue.arrayUnion(senderRoom))
             .addOnSuccessListener {
-                Log.e("Fire","추가됨")
                 db.collection("users").document(receiverUid)
                     .update("ChatRoom", FieldValue.arrayUnion(receiverRoom))
             }

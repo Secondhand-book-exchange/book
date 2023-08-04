@@ -62,4 +62,8 @@ class ChatListAdapter : BaseAdapter() {
     fun clear() {
         items.clear()
     }
+
+    fun getChatItem(position: Int): Chat {
+        return items[position]
+    }
 }

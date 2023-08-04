@@ -62,4 +62,6 @@ class Model {
     }
 }
 
-data class Chat(val profile: Uri, val name:String, val uid:String ,val check:Boolean)
+data class Chat(val profile: Uri, val name:String, val uid:String, var check:Boolean)
+
+data class ChatRoom(val check:Boolean, val timestamp:String)

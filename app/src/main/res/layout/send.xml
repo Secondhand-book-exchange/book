@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F00">
+    >
 
     <TextView
 
@@ -14,6 +14,6 @@
 
         android:padding="10dp"
         android:text="보내는 메시지"
-
+        android:background="@drawable/sender_background"
         android:textSize="18sp" />
 </RelativeLayout>
