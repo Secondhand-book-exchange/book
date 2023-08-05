@@ -50,7 +50,7 @@ class ThemeAdapter : RecyclerView.Adapter<ThemeAdapter.ThemeView>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeView {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.theme_button, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.category_item, parent, false)
 
         return ThemeView(view)
     }

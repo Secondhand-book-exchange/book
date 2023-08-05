@@ -38,6 +38,13 @@
         android:layout_marginBottom="16dp" />
 
     <Button
+        android:id="@+id/Location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="거래 동네" />
+
+    <Button
         android:id="@+id/createAccountButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

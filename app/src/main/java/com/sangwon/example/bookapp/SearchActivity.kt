@@ -14,7 +14,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        list = BookListFragment()
+        list = BookListFragment("search")
 
         binding.searchBtn.setOnClickListener(this)
     }

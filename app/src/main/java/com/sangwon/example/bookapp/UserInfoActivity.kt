@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -32,7 +33,8 @@ class UserInfoActivity : AppCompatActivity() {
             data?.data?.let {
                 // 이미지 URI를 가져옴
                 imageUri = it
-                binding.profileImageView.setImageURI(imageUri)
+                binding.profileImage.setImageURI(imageUri)
+                Log.d("ImageUri", "$imageUri")
             }
         }
     }
@@ -41,17 +43,23 @@ class UserInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityUserInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         title = "              개인정보수정"
 
         // 이전에 저장된 사용자 정보 불러와서 화면에 표시
         val userName = intent.getStringExtra("userName")
         val phoneNumber = intent.getStringExtra("phoneNumber")
+        val profileImage = intent.getStringExtra("profileImage")
         binding.nameEditText.setText(userName)
         binding.phoneNumberEditText.setText(phoneNumber)
+        if (profileImage.isNullOrBlank())
+            binding.profileImage.setBackgroundResource(R.drawable.profile)
+        else
+            Glide.with(this)
+                .load(profileImage)
+                .into(binding.profileImage)
 
         // 프로필 사진을 클릭하면 갤러리에서 사진 선택
-        binding.profileImageView.setOnClickListener {
+        binding.profileImage.setOnClickListener {
             openGallery()
         }
 
@@ -99,7 +107,12 @@ class UserInfoActivity : AppCompatActivity() {
             }
     }
 
-    private fun uploadProfileImage(userId: String, uri: Uri, newName: String, newPhoneNumber: String) {
+    private fun uploadProfileImage(
+        userId: String,
+        uri: Uri,
+        newName: String,
+        newPhoneNumber: String
+    ) {
         val storageRef = FirebaseStorage.getInstance().reference
         val profileImageRef = storageRef.child("profile_images").child(userId)
 
@@ -112,7 +125,6 @@ class UserInfoActivity : AppCompatActivity() {
                         val userUpdatesWithImage = hashMapOf<String, Any>(
                             "name" to newName,
                             "phoneNumber" to newPhoneNumber,
-                            "profileImageUrl" to imageUrl
                         )
 
                         // 사용자 정보 업데이트
@@ -123,7 +135,8 @@ class UserInfoActivity : AppCompatActivity() {
                                 returnUserInfo(newName, newPhoneNumber, imageUrl)
                             }
                             .addOnFailureListener {
-                                Toast.makeText(this, "사용자 정보 업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "사용자 정보 업데이트에 실패했습니다.", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                     }
                     .addOnFailureListener {

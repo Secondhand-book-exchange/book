@@ -3,6 +3,7 @@ package com.sangwon.example.bookapp
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -34,7 +35,17 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             binding.chat.id ->
-                startActivity(Intent(this, ChatActivity::class.java))
+            {
+                val name = intent.getStringExtra("name")
+                val uid = intent.getStringExtra("uid")
+                val intent = Intent(this, ChatActivity::class.java)
+
+                intent.putExtra("name",name);
+                intent.putExtra("uid",uid)
+                startActivity(intent)
+
+            }
+
         }
     }
 }

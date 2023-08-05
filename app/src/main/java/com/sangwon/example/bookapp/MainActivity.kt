@@ -2,21 +2,29 @@ package com.sangwon.example.bookapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.sangwon.example.bookapp.Adapter.BookListAdapter
+import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.bookapp.Adapter.ThemeAdapter
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnItemClickListener,
+    SwipeRefreshLayout.OnRefreshListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var themeAdapter: ThemeAdapter
-    var db = Firebase.firestore
+
+    companion object {
+        private const val REQUEST_USER_INFO = 1001
+        private const val TAG = "MainActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +33,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
 
         FirebaseApp.initializeApp(this)
         setListener()
-        setThemeRecyclerView()
+        setCategoryRecyclerView()
+        loadUserInfo()
     }
 
     override fun onResume() {
@@ -38,11 +47,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
     override fun onClick(v: View?) {
         when (v?.id) {
             binding.profileImage.id -> startActivity(Intent(this, MyPageActivity::class.java))
-            binding.themesBtn.id -> {}
-            binding.bookBtn.id -> {}
+            binding.themesBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
+            binding.bookBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
             binding.menuBtn.id -> {}
         }
     }
+
 
     private fun setListener() {
         // 마이페이지로 넘어가는 버튼 클릭 이벤트 처리
@@ -51,35 +61,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         binding.bookBtn.setOnClickListener(this)
         binding.menuBtn.setOnClickListener(this)
 
+        binding.swipe.setOnRefreshListener(this)
+
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             /**
              * 하단 네비게이션바
              */
             when (item.itemId) {
                 R.id.home -> {
-                    false
                 }
 
                 R.id.search -> {
                     startActivity(Intent(this, SearchActivity::class.java))
-                    false
                 }
 
                 R.id.map -> {
                     startActivity(Intent(this, BookRegisterActivity::class.java))
-                    false
                 }
 
                 R.id.notification -> {
-                    false
                 }
-
-                else -> false
             }
+            false
         }
     }
 
-    private fun setThemeRecyclerView() {
+
+    private fun setCategoryRecyclerView() {
         val icons = arrayListOf<Int>(
             R.drawable.fairytale,
             R.drawable.magazine,
@@ -88,7 +96,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             R.drawable.humanities,
             R.drawable.baseline_notifications_none_24
         )
-        val themes = arrayListOf<String>("동화", "잡지", "소설", "시", "인문학", "비문학")
+        val themes = resources.getStringArray(R.array.category)
         val spacingInPixel = resources.getDimensionPixelSize(R.dimen.single_theme_margin)
         binding.displayThemes.addItemDecoration(ThemeAdapter.HorizontalItemDecoration(spacingInPixel))
         binding.displayThemes.layoutManager =
@@ -98,13 +106,54 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         for (i in 0 until icons.size) {
             themeAdapter.add(BookTheme(icons[i], themes[i]))
         }
-        themeAdapter.notifyDataSetChanged()
         themeAdapter.setOnItemClickListener(this)
     }
+
 
     override fun onItemClick(view: View, pos: Int) {
         val intent = Intent(this, BookListActivity::class.java)
         intent.putExtra("theme", themeAdapter.list[pos].theme)
         startActivity(intent)
+    }
+
+
+    private fun loadUserInfo() {
+        val db = Firebase.firestore
+        val currentUser = Firebase.auth.currentUser
+        db.collection("users").document(currentUser!!.uid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val user = document.toObject(User::class.java)
+                    user?.let {
+                        // 사용자 정보를 UI에 설정
+                        binding.nickname.text = it.name
+                        var imagePath = "profile_images/${currentUser.uid}"
+
+                        val firebaseStorage = FirebaseStorage.getInstance()
+
+                        val storageReference = firebaseStorage.reference.child(imagePath)
+                        storageReference.downloadUrl.addOnCompleteListener { task ->
+                            if(task.isSuccessful){
+                                Glide.with(this)
+                                    .load(task.result)
+                                    .into(binding.profileImage)
+                            }
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+    }
+
+    override fun onRefresh() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.list, BookListFragment())
+            .commitAllowingStateLoss()
+        binding.swipe.isRefreshing = false
     }
 }
