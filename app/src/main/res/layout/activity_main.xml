@@ -7,6 +7,7 @@
     android:background="#f6f6f6"
     tools:context=".MainActivity">
 
+
     <RelativeLayout
         android:id="@+id/mainHead"
         android:layout_width="match_parent"
@@ -71,6 +72,13 @@
         android:layout_alignParentBottom="true"
         android:background="#bfff"
         app:menu="@menu/footer_menu" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="15dp"
+        android:layout_above="@id/bottomNavigationView"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe"

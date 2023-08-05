@@ -64,6 +64,12 @@ class BookListAdapter : BaseAdapter() {
     }
 
     fun addBook(item: BookItem) {
+        for (i:Int in 0 until items.size){
+            if (item.Date > items[i].Date) {
+                items.add(i, item)
+                return
+            }
+        }
         items.add(item)
     }
 

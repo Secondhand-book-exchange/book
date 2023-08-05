@@ -1,13 +1,19 @@
 package com.sangwon.example.bookapp
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -19,7 +25,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.bookapp.databinding.ActivityLoginBinding
+import java.io.ByteArrayOutputStream
 
 class LoginActivity : AppCompatActivity() {
     private var auth: FirebaseAuth? = null
@@ -27,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
     var mGoogleSignInClient: GoogleSignInClient? = null
     private lateinit var name: String
+    private var LOCATION_PERMISSION_REQUEST_CODE = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
                     val data = result.data
                     val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                     getGoogleInfo(task)
-                    Toast.makeText(this, "구글 로그인 성공", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "구글 로그인 중", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -63,6 +72,8 @@ class LoginActivity : AppCompatActivity() {
         binding.loginForGoogle.setOnClickListener {
             googleLogin()
         }
+
+//        requestPermission()
     }
 
     // 로그아웃하지 않을 시 자동 로그인 , 회원가입시 바로 로그인 됨
@@ -143,8 +154,20 @@ class LoginActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "회원 정보 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                Log.e(LoginActivity.TAG, "Error saving user information", e)
+                Log.e(TAG, "Error saving user information", e)
             }
+        val drawable = getDrawable(R.drawable.profile)
+        val bitmapDrawable = drawable as BitmapDrawable
+        val bitmap = bitmapDrawable.bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        val storageRef = FirebaseStorage.getInstance().reference
+        var uploadTask = storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}").putBytes(data)
+        uploadTask.addOnSuccessListener { Log.d("Firebase Storage", "새 이미지 업로드 성공") }.addOnFailureListener { exception ->
+            Log.e("Firebase Storage", "새 이미지 업로드 실패: $exception")
+        }
     }
 
     // 유저정보 넘겨주고 메인 액티비티 호출
@@ -180,6 +203,21 @@ class LoginActivity : AppCompatActivity() {
             Log.w(TAG, "signInResult:failed code=" + e.statusCode)
         }
     }
+
+    private fun requestPermission() {
+        val permission = Manifest.permission.ACCESS_FINE_LOCATION
+        val permissionGranted = PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(this, permission) != permissionGranted) {
+            ActivityCompat.requestPermissions(this, arrayOf(permission), LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            // 위치 권한이 이미 허용된 경우, 현재 위치로 지도 이동
+//            moveMapToCurrentLocation()
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 3)
+        }
+    }
+
 
     companion object {
         private const val TAG = "LoginActivity"

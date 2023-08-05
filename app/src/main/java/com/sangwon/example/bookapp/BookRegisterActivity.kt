@@ -49,6 +49,9 @@ class BookRegisterActivity : AppCompatActivity() {
         binding = ActivityBookRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val intent = intent
+
+
         //이름 추가
         val docRef = db.collection("users").document("${user!!.uid}")
         // 게시물을 등록하기 전에 이름을 db에 등록하지 않으면 에러남
@@ -70,10 +73,11 @@ class BookRegisterActivity : AppCompatActivity() {
             Location = binding.Location.text.toString()
             BookStatus = binding.BookStatus.selectedItem.toString()
             Subscript = binding.Subscript.text.toString()
-
-
-
-            uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야? 아니 그냥 튕기던데
+            if(Location=="거래 동네") {
+                Toast.makeText(this, "거래 동네를 선택해 주세요.", Toast.LENGTH_SHORT).show()
+            }else{
+                uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야? 아니 그냥 튕기던데
+            }
         }
 
         binding.BookImage.setOnClickListener {

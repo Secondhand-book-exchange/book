@@ -158,7 +158,7 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
 
                                 val params: ViewGroup.LayoutParams = view.layoutParams
                                 params.height =
-                                    totalHeight + view.dividerHeight * (postItems.size - 1)
+                                    totalHeight + view.dividerHeight * postItems.size
                                 view.layoutParams = params
                                 view.requestLayout()
                             }

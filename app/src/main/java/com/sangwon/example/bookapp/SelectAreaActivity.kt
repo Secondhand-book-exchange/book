@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.opencsv.CSVReader
 import com.sangwon.example.bookapp.databinding.ActivitySelectAreaBinding
@@ -45,12 +44,18 @@ class SelectAreaActivity : AppCompatActivity() {
             for (city in area[stateAdapter.getItem(position)]?.keys!!) {
                 cities.add(city)
             }
+            cities.sort()
             cityAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cities)
             cityList.adapter = cityAdapter
         }
         cityList.setOnItemClickListener { _, _, position, _ ->
-            val towns = area[city]?.get(cities[position]) ?: ArrayList()
             city = cities[position]
+            Log.d("AreaSelect", city)
+            for (c in cities){
+                Log.d("AreaSelect", area[c]?.get(c).toString())
+            }
+            val towns = area[state]?.get(cities[position]) ?: ArrayList()
+            towns.sort()
             val townAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, towns)
             townList.adapter = townAdapter
         }
@@ -77,14 +82,14 @@ class SelectAreaActivity : AppCompatActivity() {
 
         val areaInput = baseContext.resources.assets.open("area_library.csv")
         val csvReader = CSVReader(InputStreamReader(areaInput, "EUC-KR"))
-        val allContent = csvReader.readAll() as List<Array<String>>
+        val allArea = csvReader.readAll() as List<Array<String>>
 
         area = HashMap()
         for (state in states) {
             val city = HashMap<String, ArrayList<String>>()
             area[state] = city
         }
-        for (content in allContent) {
+        for (content in allArea) {
             /*Log.d(
                 "csv",
                 content[0] + " 도: " + content[1] + " 시: " + content[2] + " 동: " + content[3]
@@ -93,9 +98,11 @@ class SelectAreaActivity : AppCompatActivity() {
                 var town = ArrayList<String>()
                 if (area[content[1]]?.contains(content[2])!!) {
                     town = area[content[1]]?.get(content[2])!!
+                    if (town.contains(content[3]))
+                        continue
                 }
                 town?.add(content[3])
-                area[content[1]]?.put(content[2], town!!)
+                area[content[1]]?.put(content[2], town)
             }
         }
 //

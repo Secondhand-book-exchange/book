@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:hint="거래 동네" />
+        android:text="거래 동네" />
 
     <Button
         android:id="@+id/createAccountButton"
