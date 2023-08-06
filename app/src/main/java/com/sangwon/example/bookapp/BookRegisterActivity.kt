@@ -50,10 +50,10 @@ class BookRegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val intent = intent
-
+        binding.location.text = intent.getStringExtra("location")
 
         //이름 추가
-        val docRef = db.collection("users").document("${user!!.uid}")
+        val docRef = db.collection("users").document(user!!.uid)
         // 게시물을 등록하기 전에 이름을 db에 등록하지 않으면 에러남
         docRef.get()
             .addOnSuccessListener { document ->
@@ -68,10 +68,10 @@ class BookRegisterActivity : AppCompatActivity() {
             }
 
         binding.RegisterBook.setOnClickListener {
-            BookTitle = binding.BookTitle.text.toString()
+            BookTitle = binding.bookTitle.text.toString()
             Author = binding.Author.text.toString()
-            Location = binding.Location.text.toString()
-            BookStatus = binding.BookStatus.selectedItem.toString()
+            Location = binding.location.text.toString()
+            BookStatus = binding.bookStatus.selectedItem.toString()
             Subscript = binding.Subscript.text.toString()
             if(Location=="거래 동네") {
                 Toast.makeText(this, "거래 동네를 선택해 주세요.", Toast.LENGTH_SHORT).show()
@@ -80,13 +80,13 @@ class BookRegisterActivity : AppCompatActivity() {
             }
         }
 
-        binding.BookImage.setOnClickListener {
+        binding.bookImage.setOnClickListener {
             // 갤러리 접근 암시적 인텐트? 그거인듯
             val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
             galleryIntent.type = "image/*"
             startActivityForResult(galleryIntent, 1)
         }
-        binding.Location.setOnClickListener{
+        binding.location.setOnClickListener{
             val galleryIntent = Intent(this, SelectAreaActivity::class.java)
             startActivityForResult(galleryIntent, 2)
         }
@@ -95,8 +95,8 @@ class BookRegisterActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.status)
         )
-        binding.BookStatus.adapter = spinnerAdapter
-        binding.BookStatus.setSelection(0)
+        binding.bookStatus.adapter = spinnerAdapter
+        binding.bookStatus.setSelection(0)
 
         val rg = binding.category
         for (v: String in resources.getStringArray(R.array.category)) {
@@ -120,12 +120,12 @@ class BookRegisterActivity : AppCompatActivity() {
 
 
             // Uri 이미지 뷰에 넣으면 사진 나와
-            binding.BookImage.setBackgroundResource(0)
-            binding.BookImage.setImageURI(imageUri)
+            binding.bookImage.setBackgroundResource(0)
+            binding.bookImage.setImageURI(imageUri)
 
         }else if (requestCode == 2 && resultCode == RESULT_OK && data != null){
             Location = data.getStringExtra("location").toString()
-            binding.Location.text = Location
+            binding.location.text = Location
         }
     }
 

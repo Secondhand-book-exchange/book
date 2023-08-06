@@ -162,6 +162,7 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
                                 view.layoutParams = params
                                 view.requestLayout()
                             }
+                            view.isNestedScrollingEnabled = false
                         }
                     } else {
                         Log.e("downloadUrl", "failed..")

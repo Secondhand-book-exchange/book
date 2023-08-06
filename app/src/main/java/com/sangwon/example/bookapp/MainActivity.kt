@@ -2,8 +2,10 @@ package com.sangwon.example.bookapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,6 +22,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
     SwipeRefreshLayout.OnRefreshListener {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var themeAdapter: ThemeAdapter
+    private lateinit var user: User
+    private var backButtonPressedOnce = false
+
 
     companion object {
         private const val REQUEST_USER_INFO = 1001
@@ -30,6 +35,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         supportActionBar?.hide()
+
+        overridePendingTransition(R.anim.none, R.anim.none)
 
         FirebaseApp.initializeApp(this)
         setListener()
@@ -50,6 +57,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             binding.themesBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
             binding.bookBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
             binding.menuBtn.id -> {}
+        }
+    }
+
+
+    override fun onBackPressed() {
+        if (backButtonPressedOnce) {
+            finishAffinity() // 모든 액티비티 종료
+        } else {
+            backButtonPressedOnce = true
+            Toast.makeText(this, "뒤로 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({ backButtonPressedOnce = false }, 2000)
         }
     }
 
@@ -75,8 +93,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
                     startActivity(Intent(this, SearchActivity::class.java))
                 }
 
-                R.id.map -> {
-                    startActivity(Intent(this, BookRegisterActivity::class.java))
+                R.id.register -> {
+                    val intent = Intent(this, BookRegisterActivity::class.java)
+                    intent.putExtra("location", user.location)
+                    startActivity(intent)
                 }
 
                 R.id.notification -> {
@@ -124,17 +144,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    val user = document.toObject(User::class.java)
-                    user?.let {
+                    user = document.toObject(User::class.java)!!
+                    user.let {
                         // 사용자 정보를 UI에 설정
                         binding.nickname.text = it.name
-                        var imagePath = "profile_images/${currentUser.uid}"
+                        val imagePath = "profile_images/${currentUser.uid}"
 
                         val firebaseStorage = FirebaseStorage.getInstance()
 
                         val storageReference = firebaseStorage.reference.child(imagePath)
                         storageReference.downloadUrl.addOnCompleteListener { task ->
-                            if(task.isSuccessful){
+                            if (task.isSuccessful) {
                                 Glide.with(this)
                                     .load(task.result)
                                     .into(binding.profileImage)
