@@ -31,7 +31,7 @@
                 android:textColor="#000" />
 
             <TextView
-                android:id="@+id/BookTitle"
+                android:id="@+id/bookTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_toStartOf="@id/Author"
@@ -42,7 +42,7 @@
                 android:id="@+id/ISBN"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/BookTitle"
+                android:layout_below="@id/bookTitle"
                 android:text="ISBN:00-000-000-0000-0"
                 android:textColor="#000" />
 
