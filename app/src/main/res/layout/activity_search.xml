@@ -7,14 +7,6 @@
     tools:context=".SearchActivity"
     android:padding="15dp">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#bfff"
-        app:menu="@menu/footer_menu" />
-
     <RelativeLayout
         android:id="@+id/search"
         android:layout_width="match_parent"
@@ -67,6 +59,5 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/filter"
-        android:layout_above="@id/bottomNavigationView"/>
+        android:layout_below="@id/filter" />
 </RelativeLayout>
