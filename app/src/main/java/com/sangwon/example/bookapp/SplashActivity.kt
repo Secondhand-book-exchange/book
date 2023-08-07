@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Base64
 import android.util.Log
+import com.kakao.sdk.common.KakaoSdk
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -14,7 +15,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
+        KakaoSdk.init(this, "f3a368db37f444b82efe22228c6d3e09")
         getKeyHash()
 
 //        KakaoSdk.init(this, "0272df0de0ac0b5316dc14c4e4e15362")
