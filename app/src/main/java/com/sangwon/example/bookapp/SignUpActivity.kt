@@ -29,16 +29,19 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.createAccountButton.setOnClickListener {
-            createAccount(
-                binding.signupID.text.toString(),
-                binding.signupPassword.text.toString()
-            )
+            if (binding.signupID.text.trim() == "" && binding.signupPassword.text.trim() == "" && binding.signupName.text.trim() == "" && binding.phoneNumber.text.trim() == "")
+                createAccount(
+                    binding.signupID.text.toString().replace(" ", ""),
+                    binding.signupPassword.text.toString().replace(" ", "")
+                )
+            else
+                Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
             Name = binding.signupName.text.toString()
             PhoneNumber = binding.phoneNumber.text.toString()
-            Location = binding.Location.text.toString()
+            Location = binding.location.text.toString()
         }
 
-        binding.Location.setOnClickListener {
+        binding.location.setOnClickListener {
             val galleryIntent = Intent(this, SelectAreaActivity::class.java)
             startActivityForResult(galleryIntent, 2)
         }
@@ -49,7 +52,7 @@ class SignUpActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
             Location = data.getStringExtra("location").toString()
-            binding.Location.text = Location
+            binding.location.text = Location
         }
     }
 
@@ -78,50 +81,44 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfoToDatabase(
-        Name: String,
-        UserId: String,
-        PassWord: String,
-        PhoneNumber: String,
-        Location: String
+        Name: String, UserId: String, PassWord: String, PhoneNumber: String, Location: String
     ) {
         // 사용자 정보를 User 객체에 저장
         val user = User(Name, UserId, PassWord, PhoneNumber, Location)
 
         // Firestore 데이터베이스에 사용자 정보 저장
-        db.collection("users")
-            .document(Firebase.auth.currentUser!!.uid)
-            .set(user)
+        db.collection("users").document(Firebase.auth.currentUser!!.uid).set(user)
             .addOnSuccessListener {
                 Toast.makeText(this, "회원 정보가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                val drawable = getDrawable(R.drawable.profile)
+                val bitmapDrawable = drawable as BitmapDrawable
+                val bitmap = bitmapDrawable.bitmap
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val data = baos.toByteArray()
 
-                // 회원 정보가 Firestore에 저장된 후 마이페이지로 이동
-                val intent = Intent(this, MyPageActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener { e ->
+                val storageRef = FirebaseStorage.getInstance().reference
+                var uploadTask =
+                    storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}")
+                        .putBytes(data)
+                uploadTask
+                    .addOnSuccessListener {
+                        // 회원 정보가 Firestore에 저장된 후 마이페이지로 이동
+                        val intent = Intent(this, MyPageActivity::class.java)
+//                      Handler().postDelayed({ startActivity(intent) }, 1000)
+                        startActivity(intent)
+                        finish()
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("Firebase Storage", "새 이미지 업로드 실패: $exception")
+                    }
+            }.addOnFailureListener { e ->
                 Toast.makeText(this, "회원 정보 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Error saving user information", e)
             }
-
-        val drawable = getDrawable(R.drawable.profile)
-        val bitmapDrawable = drawable as BitmapDrawable
-        val bitmap = bitmapDrawable.bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
-
-        val storageRef = FirebaseStorage.getInstance().reference
-        var uploadTask = storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}").putBytes(data)
-        uploadTask.addOnSuccessListener { Log.d("Firebase Storage", "새 이미지 업로드 성공") }.addOnFailureListener{ exception ->
-            Log.e("Firebase Storage", "새 이미지 업로드 실패: $exception")
-        }
-//
-//        val profileImageRef = storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}")
-//        profileImageRef.putFile(Uri.parse()).addOnFailureListener {
-        }
-
-        companion object {
-            private const val TAG = "SignUpActivity"
-        }
     }
+
+    companion object {
+        private const val TAG = "SignUpActivity"
+    }
+}

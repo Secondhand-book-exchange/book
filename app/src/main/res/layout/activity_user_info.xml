@@ -76,7 +76,8 @@
         android:layout_marginStart="28dp"
         android:layout_marginTop="-10dp"
         android:layout_toEndOf="@id/phoneNumberTextView"
-        android:hint="전화번호" />
+        android:hint="전화번호"
+        android:inputType="phone"/>
 
     <Button
         android:id="@+id/saveButton"

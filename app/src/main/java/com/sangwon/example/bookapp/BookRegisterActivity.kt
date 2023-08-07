@@ -26,13 +26,13 @@ class BookRegisterActivity : AppCompatActivity() {
     val db = Firebase.firestore
     private lateinit var imageUri: Uri
     val auth = Firebase.auth
-    private lateinit var BookTitle  : String
-    private lateinit var Author : String
-    private lateinit var Location : String
-    private lateinit var BookStatus : String
-    private lateinit var Subscript : String
-    private var IsSale : Int = 1
-    private lateinit var name : String
+    private lateinit var BookTitle: String
+    private lateinit var Author: String
+    private lateinit var Location: String
+    private lateinit var BookStatus: String
+    private lateinit var Subscript: String
+    private var IsSale: Int = 1
+    private lateinit var name: String
     private lateinit var Category: String
 
 
@@ -73,10 +73,15 @@ class BookRegisterActivity : AppCompatActivity() {
             Location = binding.location.text.toString()
             BookStatus = binding.bookStatus.selectedItem.toString()
             Subscript = binding.Subscript.text.toString()
-            if(Location=="거래 동네") {
-                Toast.makeText(this, "거래 동네를 선택해 주세요.", Toast.LENGTH_SHORT).show()
-            }else{
-                uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야? 아니 그냥 튕기던데
+            when {
+                BookTitle.replace(" ", "") == "" ->
+                    Toast.makeText(this, "책 제목을 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                Author.replace(" ", "") == "" ->
+                    Toast.makeText(this, "작가 이름을 입력해 주세요.", Toast.LENGTH_SHORT).show()
+                Location == "거래 동네" ->
+                    Toast.makeText(this, "거래 동네를 선택해 주세요.", Toast.LENGTH_SHORT).show()
+                else ->
+                    uploadToFirestore(imageUri) //아무 이미지도 안넣으면 어떻게 되냐? 비동기라서 밑에 imagePath에 값 들어가기 전에 등록되는거 아니야? 아니 그냥 튕기던데
             }
         }
 
@@ -86,7 +91,7 @@ class BookRegisterActivity : AppCompatActivity() {
             galleryIntent.type = "image/*"
             startActivityForResult(galleryIntent, 1)
         }
-        binding.location.setOnClickListener{
+        binding.location.setOnClickListener {
             val galleryIntent = Intent(this, SelectAreaActivity::class.java)
             startActivityForResult(galleryIntent, 2)
         }
@@ -105,7 +110,7 @@ class BookRegisterActivity : AppCompatActivity() {
             rg.addView(rbtn)
         }
         rg.setOnCheckedChangeListener { _, id ->
-            Category = resources.getStringArray(R.array.category)[id-1]
+            Category = resources.getStringArray(R.array.category)[id - 1]
         }
     }
 
@@ -123,7 +128,7 @@ class BookRegisterActivity : AppCompatActivity() {
             binding.bookImage.setBackgroundResource(0)
             binding.bookImage.setImageURI(imageUri)
 
-        }else if (requestCode == 2 && resultCode == RESULT_OK && data != null){
+        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
             Location = data.getStringExtra("location").toString()
             binding.location.text = Location
         }
@@ -193,6 +198,4 @@ class BookRegisterActivity : AppCompatActivity() {
 
         return extension.toString()
     }
-
-
 }
