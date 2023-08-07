@@ -15,7 +15,6 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         list = BookListFragment("search")
-
         binding.searchBtn.setOnClickListener(this)
     }
 

@@ -29,13 +29,13 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.createAccountButton.setOnClickListener {
-            if (binding.signupID.text.trim() == "" && binding.signupPassword.text.trim() == "" && binding.signupName.text.trim() == "" && binding.phoneNumber.text.trim() == "")
+            if (binding.signupID.text.trim() == "" || binding.signupPassword.text.trim() == "" || binding.signupName.text.trim() == "" || binding.phoneNumber.text.trim() == "")
+                Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
+            else
                 createAccount(
                     binding.signupID.text.toString().replace(" ", ""),
                     binding.signupPassword.text.toString().replace(" ", "")
                 )
-            else
-                Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
             Name = binding.signupName.text.toString()
             PhoneNumber = binding.phoneNumber.text.toString()
             Location = binding.location.text.toString()
