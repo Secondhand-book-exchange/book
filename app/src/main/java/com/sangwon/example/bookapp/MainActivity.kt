@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             .get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    user = document.toObject(User::class.java)!!
+                    user = document.toObject(User::class.java)?:User()
                     user.let {
                         // 사용자 정보를 UI에 설정
                         binding.nickname.text = it.name

@@ -58,30 +58,27 @@ class SignUpActivity : AppCompatActivity() {
                     val data = result.data
                     val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                     getGoogleInfo(task)
-                    Toast.makeText(this, "구글 로그인 중", Toast.LENGTH_SHORT).show()
+                    certificateSuccess(task.result.id.toString())
                 }
             }
 
         binding.createAccountButton.setOnClickListener {
             if (binding.signupID.text.trim() == "" || binding.signupPassword.text.trim() == "" || binding.signupName.text.trim() == "" || binding.phoneNumber.text.trim() == "")
                 Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
+            else if (!certify)
+                Toast.makeText(this, "인증을 완료해주세요", Toast.LENGTH_SHORT).show()
             else
                 createAccount(
                     binding.signupID.text.toString().replace(" ", ""),
                     binding.signupPassword.text.toString().replace(" ", "")
                 )
-            else if (!certify)
-                Toast.makeText(this, "인증을 완료해주세요", Toast.LENGTH_SHORT).show()
-            else
-                Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
             Name = binding.signupName.text.toString()
             PhoneNumber = binding.phoneNumber.text.toString()
             Location = binding.location.text.toString()
         }
 
         binding.location.setOnClickListener {
-            val galleryIntent = Intent(this, SelectAreaActivity::class.java)
-            startActivityForResult(galleryIntent, 2)
+            startActivityForResult(Intent(this, SelectAreaActivity::class.java), 2)
         }
 
         binding.certifyKakao.setOnClickListener {
@@ -135,20 +132,6 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun googleCertificate() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestProfile()
-            .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val data = result.data
-                    val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                    getGoogleInfo(task)
-                    certificateSuccess(task.result.id.toString())
-                }
-            }
         val signInIntent = mGoogleSignInClient!!.signInIntent
         resultLauncher.launch(signInIntent)
     }
@@ -222,14 +205,13 @@ class SignUpActivity : AppCompatActivity() {
                 val data = baos.toByteArray()
 
                 val storageRef = FirebaseStorage.getInstance().reference
-                var uploadTask =
+                val uploadTask =
                     storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}")
                         .putBytes(data)
                 uploadTask
                     .addOnSuccessListener {
                         // 회원 정보가 Firestore에 저장된 후 마이페이지로 이동
                         val intent = Intent(this, MyPageActivity::class.java)
-//                      Handler().postDelayed({ startActivity(intent) }, 1000)
                         startActivity(intent)
                         finish()
                     }

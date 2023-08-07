@@ -49,11 +49,7 @@ class LoginActivity : AppCompatActivity() {
             signIn(binding.idEditText.text.toString(), binding.passwordEditText.text.toString())
         }
 
-        binding.loginForGoogle.setOnClickListener {
-            googleLogin()
-        }
-
-//        requestPermission()
+//      requestPermission()
     }
 
     // 로그아웃하지 않을 시 자동 로그인 , 회원가입시 바로 로그인 됨
@@ -92,25 +88,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun googleLogin() {
-        val signInIntent = mGoogleSignInClient!!.signInIntent
-        resultLauncher.launch(signInIntent)
-    }
-
-    private fun getGoogleInfo(completedTask: Task<GoogleSignInAccount>) {
-        val TAG = "google111"
-        try {
-            val account = completedTask.getResult(ApiException::class.java)
-            Log.d(TAG, account.id!!)
-            Log.d(TAG, account.familyName!!)
-            Log.d(TAG, account.givenName!!)
-            Log.d(TAG, account.email!!)
-            signIn(account.email!!, "GoogleLoginPassword")
-            name = account.familyName + account.givenName
-        } catch (e: ApiException) {
-            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-        }
-    }
 
     private fun requestPermission() {
         val permission = Manifest.permission.ACCESS_FINE_LOCATION
