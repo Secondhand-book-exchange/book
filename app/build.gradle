@@ -71,4 +71,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.14.2'
 
     implementation 'com.opencsv:opencsv:5.6'
+
+    implementation "com.kakao.sdk:v2-user:2.15.0"
 }
