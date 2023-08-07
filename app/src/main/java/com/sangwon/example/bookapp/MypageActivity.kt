@@ -11,12 +11,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.sangwon.example.bookapp.databinding.ActivityMypageBinding
 
 class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMypageBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var profileImageUrl:String
+    private lateinit var profileImageUrl: String
 
     companion object {
         private const val REQUEST_USER_INFO = 1001
@@ -65,8 +67,8 @@ class MyPageActivity : AppCompatActivity() {
             intent.putExtra("type", "sales")
             startActivity(intent)
         }
-        binding.chatHistoryButton.setOnClickListener{
-            startActivity(Intent(this,ChatListActivity::class.java))
+        binding.chatHistoryButton.setOnClickListener {
+            startActivity(Intent(this, ChatListActivity::class.java))
         }
     }
 
@@ -82,11 +84,21 @@ class MyPageActivity : AppCompatActivity() {
                         // 사용자 정보를 UI에 설정
                         binding.usernameTextView.text = it.name
                         binding.userEmailTextView.text = it.userId
-                        binding.PhoneNumberTextView.text = it.phoneNumber.replace("({3}-{3,4}-{4})","$1-$2-$3")
-                        profileImageUrl = it.profileImageUrl
-                        Glide.with(this)
-                            .load(profileImageUrl)
-                            .into(binding.profileImage)
+                        binding.PhoneNumberTextView.text =
+                            it.phoneNumber.replace("({3}-{3,4}-{4})", "$1-$2-$3")
+                        profileImageUrl = "profile_images/${auth.currentUser!!.uid}"
+
+                        val storageReference = FirebaseStorage.getInstance().reference.child(profileImageUrl)
+
+                        storageReference.downloadUrl.addOnCompleteListener { task ->
+                            profileImageUrl = task.result.toString()
+                            Glide.with(this)
+                                .load(task.result)
+                                .into(binding.profileImage)
+                        }.addOnFailureListener {
+                            binding.profileImage.setBackgroundResource(R.drawable.profile)
+                            profileImageUrl = ""
+                        }
                     }
                 } else {
                     Log.d(TAG, "No such document")

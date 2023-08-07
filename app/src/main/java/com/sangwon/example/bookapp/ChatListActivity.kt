@@ -1,9 +1,9 @@
 package com.sangwon.example.bookapp
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.ListView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -15,12 +15,15 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ChatListActivity : AppCompatActivity() {
-    lateinit var listview: ListView
-    lateinit var adapter: ChatListAdapter
-    var db = Firebase.firestore
+    private lateinit var listview: ListView
+    private lateinit var adapter: ChatListAdapter
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var imagePath: String
-    val auth = Firebase.auth
+    private val auth = Firebase.auth
+    private val db = Firebase.firestore
+
+//    private val defaultImage = "https://firebasestorage.googleapis.com/v0/b/secondhandbook-d7a8f.appspot.com/o/profile_images%2Fdefault.jpg?alt=media&token=3f20c0d5-7501-4897-a5cc-594979789ae3"
+    private val defaultImage = "/drawable/profile.jpg"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,40 +54,35 @@ class ChatListActivity : AppCompatActivity() {
                                 val uid = chatroom.substring(0, 28)
 
                                 //해당 유저의 정보에 접근해서 chat만들기
-                                db.collection("users").document("${uid}")
+                                db.collection("users").document("$uid")
                                     .get().addOnSuccessListener { documentSnapshot ->
                                         val name = documentSnapshot.getString("name")
 
-                                        imagePath =
-                                            documentSnapshot.getString("profileImageUrl").toString()
+                                        imagePath = "profile_images/$uid"
                                         // 이미지를 등록하지 않은 경우 default 이미지
-                                        if (imagePath == "") {
-                                            imagePath = "profile_images/default.jpg"
-                                        }
-                                        Log.e("imagePath", "${imagePath}")
+
                                         val storageReference =
                                             firebaseStorage.getReference().child(imagePath)
                                         storageReference.downloadUrl.addOnCompleteListener { task ->
+                                            lateinit var imageData:Uri
                                             if (task.isSuccessful) {
-                                                val imageData = task.result
-                                                val chatItem = Chat(
-                                                    imageData,
-                                                    name ?: "",
-                                                    uid ?: "",
-                                                    true
-                                                )
-                                                chatItems.add(chatItem)
-                                                // 아마 data.size가 채팅방 개수이지 않을까?
-                                                Log.e(
-                                                    "size",
-                                                    "${chatItems.size} / ${chatRoomArray.size}"
-                                                )
-                                                if (chatItems.size == chatRoomArray.size) {
-                                                    for (item in chatItems) adapter.addChat(item)
-                                                    adapter.notifyDataSetChanged()
-                                                    Log.e("chat", "good")
-                                                }
-                                            } else Log.e("downloadUrl", "failed")
+                                                imageData = task.result
+
+                                            } else {
+                                                imageData = Uri.parse(defaultImage)
+                                            }
+                                            val chatItem = Chat(
+                                                imageData,
+                                                name ?: "",
+                                                uid,
+                                                true
+                                            )
+                                            chatItems.add(chatItem)
+
+                                            if (chatItems.size == chatRoomArray.size) {
+                                                for (item in chatItems) adapter.addChat(item)
+                                                adapter.notifyDataSetChanged()
+                                            }
                                         }
                                     }
                             }
