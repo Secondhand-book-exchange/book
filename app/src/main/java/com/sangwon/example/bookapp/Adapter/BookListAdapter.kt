@@ -51,7 +51,7 @@ class BookListAdapter : BaseAdapter() {
         view.findViewById<TextView>(R.id.date).text = SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분").format(items[position].Date)
         val type = view.findViewById<TextView>(R.id.type)
         if (items[position].type()) {
-            type.text = "거레 완료"
+            type.text = "거래 완료"
             type.setTextColor(Color.RED)
             view.setBackgroundColor(Color.parseColor("#DDDDDD"))
             iconImageView.alpha=0.6f
