@@ -17,7 +17,7 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         val intent = intent
-        binding.BookTitle.text = intent.getStringExtra("BookTitle")
+        binding.bookTitle.text = intent.getStringExtra("BookTitle")
         binding.Author.text = intent.getStringExtra("Author")
         binding.ISBN.text = intent.getStringExtra("ISBN")
         binding.Subscript.text = intent.getStringExtra("Subscript")

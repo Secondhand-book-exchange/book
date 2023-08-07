@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -137,37 +138,39 @@ class LoginActivity : AppCompatActivity() {
         PhoneNumber: String
     ) {
         // 사용자 정보를 User 객체에 저장
-        val user = User(Name, UserId, PassWord, PhoneNumber)
-        val db = FirebaseFirestore.getInstance() // Firestore 인스턴스 생성
+        val user = User(Name, UserId, PassWord, PhoneNumber, "지역 선택")
+        val db = FirebaseFirestore.getInstance()
 
         // Firestore 데이터베이스에 사용자 정보 저장
-        db.collection("users")
-            .document(Firebase.auth.currentUser!!.uid)
-            .set(user)
+        db.collection("users").document(Firebase.auth.currentUser!!.uid).set(user)
             .addOnSuccessListener {
                 Toast.makeText(this, "회원 정보가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                val drawable = getDrawable(R.drawable.profile)
+                val bitmapDrawable = drawable as BitmapDrawable
+                val bitmap = bitmapDrawable.bitmap
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                val data = baos.toByteArray()
 
-                // 회원 정보가 Firestore에 저장된 후 마이페이지로 이동
-                val intent = Intent(this, MyPageActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener { e ->
+                val storageRef = FirebaseStorage.getInstance().reference
+                var uploadTask =
+                    storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}")
+                        .putBytes(data)
+                uploadTask
+                    .addOnSuccessListener {
+                        // 회원 정보가 Firestore에 저장된 후 마이페이지로 이동
+                        val intent = Intent(this, MyPageActivity::class.java)
+//                      Handler().postDelayed({ startActivity(intent) }, 1000)
+                        startActivity(intent)
+                        finish()
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("Firebase Storage", "새 이미지 업로드 실패: $exception")
+                    }
+            }.addOnFailureListener { e ->
                 Toast.makeText(this, "회원 정보 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Error saving user information", e)
             }
-        val drawable = getDrawable(R.drawable.profile)
-        val bitmapDrawable = drawable as BitmapDrawable
-        val bitmap = bitmapDrawable.bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
-
-        val storageRef = FirebaseStorage.getInstance().reference
-        var uploadTask = storageRef.child("profile_images/${Firebase.auth.currentUser!!.uid}").putBytes(data)
-        uploadTask.addOnSuccessListener { Log.d("Firebase Storage", "새 이미지 업로드 성공") }.addOnFailureListener { exception ->
-            Log.e("Firebase Storage", "새 이미지 업로드 실패: $exception")
-        }
     }
 
     // 유저정보 넘겨주고 메인 액티비티 호출
