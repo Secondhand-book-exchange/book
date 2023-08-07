@@ -14,8 +14,6 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        list = BookListFragment("search")
-
         binding.searchBtn.setOnClickListener(this)
     }
 
@@ -23,6 +21,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             binding.searchBtn.id -> {
                 val searchKeyWord = binding.searchText.text.toString()
+                list = BookListFragment("search")
                 list.setKeyword(searchKeyWord)
                 supportFragmentManager.beginTransaction().replace(binding.list.id, list).commit()
             }
