@@ -42,7 +42,7 @@ class UserInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityUserInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        title = "              개인정보수정"
+        title = "               개인정보수정"
 
         // 이전에 저장된 사용자 정보 불러와서 화면에 표시
         val userName = intent.getStringExtra("userName")

@@ -30,7 +30,7 @@ class MyPageActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        title = "                마이페이지"
+        title = "                 마이페이지"
 
         val currentUser = auth.currentUser
         currentUser?.let {

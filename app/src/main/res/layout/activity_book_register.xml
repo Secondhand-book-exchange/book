@@ -1,80 +1,86 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/BookTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="책 이름" />
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/Author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="저자" />
+        <EditText
+            android:id="@+id/BookTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="책 이름" />
 
-    <EditText
-        android:id="@+id/ISBN"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="ISBN" />
-
-    <ImageView
-        android:id="@+id/BookImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/imageadd"
-        android:scaleType="fitXY"
-        android:contentDescription="책 표지 이미지"/>
-
-    <Button
-        android:id="@+id/Location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="거래 동네" />
-
-    <Spinner
-        android:id="@+id/BookStatus"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp" />
-
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <RadioGroup
-            android:id="@+id/category"
+        <EditText
+            android:id="@+id/Author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:hint="저자" />
 
-        </RadioGroup>
+        <EditText
+            android:id="@+id/ISBN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="ISBN" />
 
-    </HorizontalScrollView>
+        <ImageView
+            android:id="@+id/BookImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/imageadd"
+            android:scaleType="fitXY"
+            android:contentDescription="책 표지 이미지"/>
 
-    <EditText
-        android:id="@+id/Subscript"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="내용" />
+        <Button
+            android:id="@+id/Location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="거래 동네" />
 
-    <Button
-        android:id="@+id/RegisterBook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="등록하기" />
+        <Spinner
+            android:id="@+id/BookStatus"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp" />
 
-</LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+            </RadioGroup>
+
+        </HorizontalScrollView>
+
+        <EditText
+            android:id="@+id/Subscript"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="내용" />
+
+        <Button
+            android:id="@+id/RegisterBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="등록하기" />
+
+    </LinearLayout>
+</ScrollView>

@@ -127,6 +127,12 @@ class BookRegisterActivity : AppCompatActivity() {
 
     // Upload the image to Firestore
     private fun uploadToFirestore(imageUri: Uri) {
+        // Check if the location is empty
+        if (Location.isBlank()) {
+            Toast.makeText(this, "거래 동네를 선택해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val imageName = System.currentTimeMillis().toString() + "." + getFileExtension(imageUri)
         val fileref = storageRef.child("images/$imageName")
 
