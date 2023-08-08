@@ -2,10 +2,9 @@ package com.sangwon.example.bookapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.opencsv.CSVReader
+import com.sangwon.example.bookapp.Adapter.AreaAdapter
 import com.sangwon.example.bookapp.databinding.ActivitySelectAreaBinding
 import java.io.InputStreamReader
 
@@ -13,7 +12,6 @@ import java.io.InputStreamReader
 class SelectAreaActivity : AppCompatActivity() {
     lateinit var binding: ActivitySelectAreaBinding
     lateinit var area: HashMap<String, HashMap<String, ArrayList<String>>>
-    lateinit var cityAdapter: ArrayAdapter<String>
     val states =
         "경기도, 대구광역시, 충청북도, 충청남도, 제주특별자치도, 강원도, 세종특별자치시, 울산광역시, 대전광역시, 광주광역시, 전라남도, 부산광역시, 전라북도, 경상남도, 서울특별시, 경상북도, 인천광역시".split(
             ", "
@@ -32,12 +30,16 @@ class SelectAreaActivity : AppCompatActivity() {
         areaDatePreprocessing()
 
 
-        val stateAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, states)
+        val stateAdapter = AreaAdapter()
         val stateList = binding.state
         val cityList = binding.city
         val townList = binding.town
+        stateAdapter.setArea(states as ArrayList<String>)
         stateList.adapter = stateAdapter
-        stateList.setOnItemClickListener { _, _, position, _ ->
+        stateList.setOnItemClickListener { _, view, position, _ ->
+            (stateList.adapter as AreaAdapter).selectedView(position)
+            (stateList.adapter as AreaAdapter).notifyDataSetChanged()
+
             cities = ArrayList()
             state = states[position]
             city = stateAdapter.getItem(position).toString()
@@ -45,21 +47,32 @@ class SelectAreaActivity : AppCompatActivity() {
                 cities.add(city)
             }
             cities.sort()
-            cityAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cities)
+            cities.remove("")
+            cities.add(0, "$state 전체")
+
+            val cityAdapter = AreaAdapter()
+            cityAdapter.setArea(cities)
             cityList.adapter = cityAdapter
-        }
-        cityList.setOnItemClickListener { _, _, position, _ ->
-            city = cities[position]
-            Log.d("AreaSelect", city)
-            for (c in cities){
-                Log.d("AreaSelect", area[c]?.get(c).toString())
+
+            if (townList.adapter != null) {
+                townList.adapter = null
             }
-            val towns = area[state]?.get(cities[position]) ?: ArrayList()
-            towns.sort()
-            val townAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, towns)
+        }
+        cityList.setOnItemClickListener { _, view, position, _ ->
+            (cityList.adapter as AreaAdapter).selectedView(position)
+            (cityList.adapter as AreaAdapter).notifyDataSetChanged()
+
+            city = cities[position]
+            val towns: ArrayList<String> = area[state]?.get(cities[position]) ?: ArrayList()
+
+            val townAdapter = AreaAdapter()
+            townAdapter.setArea(towns)
             townList.adapter = townAdapter
         }
-        townList.setOnItemClickListener { _, _, position, _ ->
+        townList.setOnItemClickListener { _, view, position, _ ->
+            (townList.adapter as AreaAdapter).selectedView(position)
+            (townList.adapter as AreaAdapter).notifyDataSetChanged()
+
             town = townList.adapter.getItem(position).toString()
         }
 
@@ -90,10 +103,6 @@ class SelectAreaActivity : AppCompatActivity() {
             area[state] = city
         }
         for (content in allArea) {
-            /*Log.d(
-                "csv",
-                content[0] + " 도: " + content[1] + " 시: " + content[2] + " 동: " + content[3]
-            )*/
             if (area.containsKey(content[1])) {
                 var town = ArrayList<String>()
                 if (area[content[1]]?.contains(content[2])!!) {
@@ -101,12 +110,20 @@ class SelectAreaActivity : AppCompatActivity() {
                     if (town.contains(content[3]))
                         continue
                 }
-                town?.add(content[3])
+                town.add(content[3])
                 area[content[1]]?.put(content[2], town)
             }
         }
-//
-//        Log.d("towns",area.keys.toString())
+        val it: MutableCollection<HashMap<String, ArrayList<String>>> = area.values
+        for (city in it) {
+            val keys = city.keys
+            for (town in keys) {
+                city[town]?.sort()
+                city[town]?.remove("")
+                city[town]?.add(0, "$town 전체")
+
+            }
+        }
 
     }
 }
