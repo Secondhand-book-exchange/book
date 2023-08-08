@@ -65,6 +65,7 @@ class SignUpActivity : AppCompatActivity() {
         binding.createAccountButton.setOnClickListener {
             if (binding.signupID.text.trim() == "" || binding.signupPassword.text.trim() == "" || binding.signupName.text.trim() == "" || binding.phoneNumber.text.trim() == "")
                 Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
+
             else if (!certify)
                 Toast.makeText(this, "인증을 완료해주세요", Toast.LENGTH_SHORT).show()
             else
