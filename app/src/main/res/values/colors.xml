@@ -17,7 +17,11 @@
     <color name="background">#FCFCFC</color>
     <color name="beige">#F5F5DC</color>
     <color name="sale">#157000</color>
-    <color name="main">#f6f6f6</color>
     <color name="red">#ff0000</color>
     <color name="blue">#0000ff</color>
+    <color name="main">#EFEFEF</color>
+    <color name="main1">#98EECC</color>
+    <color name="main2">#D0F5BE</color>
+    <color name="main3">#FBFFDC</color>
+    <color name="main4">#A4907C</color>
 </resources>
