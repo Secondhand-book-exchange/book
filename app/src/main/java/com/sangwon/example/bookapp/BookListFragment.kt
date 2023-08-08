@@ -59,39 +59,9 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
             val postItems = arrayListOf<BookItem>() // 데이터를 임시로 저장할 리스트
             val auth = Firebase.auth.currentUser
 
-            fun all() {
-                for (item in postItems)
-                    adapter.addBook(item)
-            }
-
-            fun sales() {
-                for (item in postItems)
-                    if (item.uid == auth?.uid && item.type())
-                        adapter.addBook(item)
-
-            }
-
-            fun purchase() {
-                for (item in postItems)
-                    if (item.uid == auth?.uid && !item.type())
-                        adapter.addBook(item)
-            }
-
-            fun search() {
-                for (item in postItems)
-                    if (item.BookTitle.contains(keyword))
-                        adapter.addBook(item)
-            }
-
-            fun category() {
-                for (item in postItems)
-                    adapter.addBook(item)
-            }
-
             val result = withContext(Dispatchers.IO) {
                 val db = Firebase.firestore
                 db.collection("Posts")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .await()
             }
@@ -129,19 +99,28 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
                         if (postItems.size == result.size()) {
                             when (key) {
                                 "" ->
-                                    all()
+                                    for (item in postItems)
+                                        adapter.addBook(item)
 
                                 "sales" ->
-                                    sales()
+                                    for (item in postItems)
+                                        if (item.uid == auth?.uid && item.type())
+                                            adapter.addBook(item)
 
                                 "purchase" ->
-                                    purchase()
+                                    for (item in postItems)
+                                        if (item.uid == auth?.uid && !item.type())
+                                            adapter.addBook(item)
 
                                 "search" ->
-                                    search()
+                                    for (item in postItems)
+                                        if (item.BookTitle.contains(keyword))
+                                            adapter.addBook(item)
 
                                 "category" ->
-                                    category()
+                                    for (item in postItems)
+                                        if (item.Category==category)
+                                            adapter.addBook(item)
                             }
                             adapter.notifyDataSetChanged()
 

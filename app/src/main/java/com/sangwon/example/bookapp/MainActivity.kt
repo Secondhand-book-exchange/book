@@ -123,16 +123,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         themeAdapter = ThemeAdapter()
         binding.displayThemes.adapter = themeAdapter
-        for (i in 0 until icons.size) {
+        for (i in 0 until icons.size)
             themeAdapter.add(BookTheme(icons[i], themes[i]))
-        }
         themeAdapter.setOnItemClickListener(this)
     }
 
 
     override fun onItemClick(view: View, pos: Int) {
         val intent = Intent(this, BookListActivity::class.java)
-        intent.putExtra("theme", themeAdapter.list[pos].theme)
+        intent.putExtra("type", "category")
+        intent.putExtra("category", themeAdapter.list[pos].theme)
         startActivity(intent)
     }
 
@@ -153,12 +153,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
                         val firebaseStorage = FirebaseStorage.getInstance()
 
                         val storageReference = firebaseStorage.reference.child(imagePath)
-                        storageReference.downloadUrl.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
+                        storageReference.downloadUrl.addOnSuccessListener { task ->
                                 Glide.with(this)
-                                    .load(task.result)
+                                    .load(task)
                                     .into(binding.profileImage)
-                            }
                         }
                     }
                 } else {
