@@ -14,6 +14,7 @@ import com.sangwon.example.bookapp.Adapter.ChatListAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.sql.Timestamp
 
 class ChatListActivity : AppCompatActivity() {
     private lateinit var listview: ListView
@@ -101,7 +102,8 @@ class ChatListActivity : AppCompatActivity() {
                                 Uri.parse(defaultImage),
                                 "채팅창이 없습니다.",
                                 "",
-                                false
+                                false,
+                                "0"
                             )
                             chatItems.add(emptyChatItem)
                             adapter.addChat(emptyChatItem)
