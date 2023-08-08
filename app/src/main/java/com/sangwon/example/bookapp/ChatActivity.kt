@@ -42,9 +42,6 @@ class ChatActivity : AppCompatActivity() {
         //넘어온 데이터 변수에 담기
         receiverName = intent.getStringExtra("name").toString()
         receiverUid = intent.getStringExtra("uid").toString()
-        Log.e("name","${receiverName} + ${receiverUid}")
-//        receiverName = "dondoncham"
-//        receiverUid = "PAzVTYJY5fSXbxXHEFWHM5MC9bN2"
 
         var auth = Firebase.auth // 인증
         var db = Firebase.firestore // DB 객체
@@ -55,7 +52,7 @@ class ChatActivity : AppCompatActivity() {
         //보낸이 방
         senderRoom = receiverUid + senderUid
 
-        //받는이방
+        //받는이 방
         receiverRoom = senderUid + receiverUid
 
         //users 정보에 채팅방 정보 추가
@@ -68,6 +65,27 @@ class ChatActivity : AppCompatActivity() {
             .addOnFailureListener {
                 Log.e("Fire","배열 필드 업테이드 실패")
             }
+        val chatRoomInfoInit = ChatingRoomInfo(true, Timestamp.now().toString())
+        //ChatingRoomInfo 초기화:양쪽 방의 상태를 초기화
+        db.collection("Chats").document(senderUid!!)
+            .collection("${senderRoom}").document("ChatingRoomInfo").get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val documentSnapshot = task.result
+                    if (!documentSnapshot.exists()) {
+                        // ChatingRoomInfo 문서가 존재하지 않는 경우 초기화
+                        db.collection("Chats").document(senderUid!!)
+                            .collection("${senderRoom}").document("ChatingRoomInfo").set(chatRoomInfoInit)
+                            .addOnSuccessListener {
+                                db.collection("Chats").document(receiverUid!!)
+                                    .collection("${receiverRoom}").document("ChatingRoomInfo").set(chatRoomInfoInit)
+                            }
+                    }
+                } else {
+                    Log.e("ChatListActivity", "Error getting ChatingRoomInfo document: ", task.exception)
+                }
+            }
+
         //액션바에 상대방 이름 보여주기
         supportActionBar?.title = receiverName
 
@@ -77,6 +95,9 @@ class ChatActivity : AppCompatActivity() {
             val timestamp = Timestamp.now().toString()
             val messageObject = Message(message, senderUid, timestamp)
 
+            //채팅방 정보 생성
+            val chatRoomInfo = ChatingRoomInfo(true, Timestamp.now().toString())
+
             // 데이터 저장
             db.collection("Chats").document(senderUid!!)
                 .collection("${senderRoom}").document().set(messageObject)
@@ -84,6 +105,16 @@ class ChatActivity : AppCompatActivity() {
                     db.collection("Chats").document(receiverUid)
                         .collection("${receiverRoom}").document().set(messageObject)
                 }
+
+            //채팅방 정보 저장
+            db.collection("Chats").document(senderUid!!)
+                .collection("${senderRoom}").document("ChatingRoomInfo").set(chatRoomInfo)
+//                .addOnSuccessListener {
+////                    db.collection("Chats").document(receiverUid)
+////                        .collection("${receiverRoom}").document("ChatingRoomInfo").set(ChatingRoomInfo)
+//                }
+
+
             //입력값 초기화
             binding.messageEdit.setText("")
         }
@@ -97,11 +128,14 @@ class ChatActivity : AppCompatActivity() {
                    messageList.clear()
 
                     for(document in snapshot.documents){
-                        val message = document.getString("message")
-                        val senderUid = document.getString("sendId")
-                        val timestamp = document.getString("timestamp")
-                        val messageObject = Message(message,senderUid,timestamp!!)
-                        messageList.add(messageObject)
+                        if(document.id != "ChatingRoomInfo") {
+                            val message = document.getString("message")
+                            val senderUid = document.getString("sendId")
+                            val timestamp = document.getString("timestamp")
+                            val messageObject = Message(message, senderUid, timestamp!!)
+                            messageList.add(messageObject)
+                        }
+                        scrollRecyclerViewToBottom()
 
                     }
                     messageAdapter.notifyDataSetChanged()
@@ -116,6 +150,9 @@ class ChatActivity : AppCompatActivity() {
         messageListener.remove()
     }
 
+    private fun scrollRecyclerViewToBottom() {
+        binding.chatRecyclerView.scrollToPosition(messageList.size - 1)
+    }
 
 
 }

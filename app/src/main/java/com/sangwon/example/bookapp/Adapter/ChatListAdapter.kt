@@ -38,6 +38,7 @@ class ChatListAdapter : BaseAdapter() {
         }
 
 
+
         val iconImageView:ImageView = view.findViewById(R.id.profile)
         Glide.with(context!!)
             .load(items[position].profile)
@@ -65,5 +66,11 @@ class ChatListAdapter : BaseAdapter() {
 
     fun getChatItem(position: Int): Chat {
         return items[position]
+    }
+
+    //정렬 드가자
+    fun sortByTimestamp() {
+        items.sortBy { it.timestamp }
+        // sortByDescending
     }
 }
