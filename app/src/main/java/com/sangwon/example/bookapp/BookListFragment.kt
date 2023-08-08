@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.Date
+import com.google.firebase.Timestamp
 
 /**
  * A fragment representing a list of Items.
@@ -161,6 +162,8 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
         intent.putExtra("Subscript", item.Subscript)
         intent.putExtra("uid", item.uid)
         intent.putExtra("name", item.name)
+        val timestamp = Timestamp(item.Date).toString()
+        intent.putExtra("timestamp", timestamp) //타임스탬프를 이해서 게시물 찾기
         startActivity(intent)
     }
 

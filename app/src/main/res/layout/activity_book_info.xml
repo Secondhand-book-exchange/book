@@ -107,16 +107,35 @@
                 android:textColor="#000"
                 android:textSize="18sp" />
 
+
         </RelativeLayout>
+
+
     </ScrollView>
+
+    <Button
+        android:id="@+id/salefinish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30px"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:text="판매 종료">
+
+    </Button>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="15dp"
-        android:src="@drawable/baseline_chat_24"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/baseline_chat_24" />
 
 </RelativeLayout>

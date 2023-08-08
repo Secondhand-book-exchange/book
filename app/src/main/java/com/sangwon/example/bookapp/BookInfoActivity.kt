@@ -7,12 +7,15 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.bookapp.databinding.ActivityBookInfoBinding
+
 
 class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityBookInfoBinding
@@ -36,6 +39,42 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
         binding.bookTitle.text = intent.getStringExtra("BookTitle")
         binding.Author.text = intent.getStringExtra("Author")
         binding.Subscript.text = intent.getStringExtra("Subscript")
+
+        val uid = auth.currentUser?.uid
+
+        //자기가 올린 게시물이라면 판매 종료 버튼 등장
+        if(uid == intent.getStringExtra("uid"))
+        {
+            val chatButton = findViewById<FloatingActionButton>(R.id.chat)
+            chatButton.visibility = View.GONE // 또는 View.GONE
+            binding.salefinish.visibility = View.VISIBLE
+        }
+
+        binding.salefinish.setOnClickListener {
+            val timestamp = intent.getStringExtra("timestamp")
+            lateinit var documentId : String
+
+            //우선 타임스탬프가 겹칠일이 없다는 전제하에 작업을 진행
+            val postRef = db.collection("Posts")
+                .addSnapshotListener { value, error ->
+                    for (document in value!!.documents) {
+                        if(document.get("timestamp").toString() == timestamp) {
+                            documentId = document.id
+                            val updates = hashMapOf(
+                                "isSale" to 0
+                            )
+                            //업데이트하기
+                            db.collection("Posts").document(documentId).update(updates as Map<String, Any>)
+                                .addOnSuccessListener {
+                                    Log.e("did","1")
+                                }
+                                .addOnFailureListener {
+                                    Log.e("did","0")
+                                }
+                        }
+                    }
+                }
+        }
 
 
         val uri = intent.getStringExtra("BookCover")

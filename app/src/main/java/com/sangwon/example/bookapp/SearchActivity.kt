@@ -59,6 +59,8 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
             true
         }
         binding.searchBtn.setOnClickListener(this)
+
+
     }
 
     override fun onClick(v: View?) {
