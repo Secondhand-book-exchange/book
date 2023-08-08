@@ -1,6 +1,8 @@
 package com.sangwon.example.bookapp
 
 import android.net.Uri
+import java.sql.Timestamp
+import java.util.*
 import java.util.Date
 
 data class Posts(
@@ -66,6 +68,6 @@ class Model {
     }
 }
 
-data class Chat(val profile: Uri, val name: String, val uid: String, var check: Boolean)
+data class Chat(val profile: Uri, val name:String, val uid:String, var check:Boolean,var timestamp: String)
 
-data class ChatRoom(val check: Boolean, val timestamp: String)
+data class ChatingRoomInfo(val check:Boolean, val timestamp:String)

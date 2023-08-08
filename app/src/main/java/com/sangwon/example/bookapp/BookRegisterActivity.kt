@@ -60,7 +60,6 @@ class BookRegisterActivity : AppCompatActivity() {
                 if (document != null && document.exists()) {
                     // 문서가 존재하고 데이터를 가져온 경우
                     name = document.getString("name").toString()
-                    Log.d("TAG", "Name: $name")
                 } else {
                     // 문서가 없거나 가져오지 못한 경우
                     Log.d("TAG", "No such document")
