@@ -23,7 +23,7 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
         binding.Subscript.text = intent.getStringExtra("Subscript")
 
         val uri = intent.getStringExtra("BookCover")
-        if (uri != "defaulImage.jpeg")
+        if (uri != "defaultImage.jpeg")
             Glide.with(this)
                 .load(Uri.parse(uri))
                 .into(binding.imageViewBookCover)

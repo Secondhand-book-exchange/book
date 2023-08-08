@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".BookInfoActivity">
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="15dp"
-        android:src="@drawable/baseline_chat_24"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,44 +14,78 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/Author"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:text="작가"
-                android:textColor="#000" />
+            <ImageView
+                android:id="@+id/imageViewBookCover"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:id="@+id/bookTitle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toStartOf="@id/Author"
+                android:layout_height="wrap_content"
                 android:text="제목"
-                android:textColor="#000" />
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:layout_below="@id/imageViewBookCover"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/Author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="작가: "
+                android:textSize="14sp"
+                android:textColor="#333"
+                android:layout_below="@id/bookTitle"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/Seller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="판매자: "
+                android:textSize="14sp"
+                android:textColor="#333"
+                android:layout_below="@id/Author"
+                android:layout_alignStart="@id/Author"
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 android:id="@+id/ISBN"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/bookTitle"
-                android:text="ISBN:00-000-000-0000-0"
-                android:textColor="#000" />
-
-            <ImageView
-                android:id="@+id/imageViewBookCover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/ISBN" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISBN: "
+                android:textSize="14sp"
+                android:textColor="#333"
+                android:layout_below="@id/Seller"
+                android:layout_alignStart="@id/Seller"
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 android:id="@+id/Subscript"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/imageViewBookCover"
-                android:hint="내용"
-                android:textColor="#000" />
+                android:text="상세 정보"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:layout_below="@id/ISBN"
+                android:layout_marginTop="16dp"/>
 
         </RelativeLayout>
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="15dp"
+        android:src="@drawable/baseline_chat_24"/>
+
 </RelativeLayout>
