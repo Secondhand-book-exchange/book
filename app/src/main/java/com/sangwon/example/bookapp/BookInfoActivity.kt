@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -36,6 +37,20 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
         binding.bookTitle.text = intent.getStringExtra("BookTitle")
         binding.Author.text = intent.getStringExtra("Author")
         binding.Subscript.text = intent.getStringExtra("Subscript")
+
+        val uid = auth.currentUser?.uid
+
+        //자기가 올린 게시물이라면 판매 종료 버튼 등장
+        if(uid == intent.getStringExtra("uid"))
+        {
+            val chatButton = findViewById<FloatingActionButton>(R.id.chat)
+            chatButton.visibility = View.GONE // 또는 View.GONE
+            binding.salefinish.visibility = View.VISIBLE
+        }
+
+        binding.salefinish.setOnClickListener {
+
+        }
 
 
         val uri = intent.getStringExtra("BookCover")
