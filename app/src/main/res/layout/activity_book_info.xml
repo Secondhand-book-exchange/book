@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookInfoActivity">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp">
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,63 +22,90 @@
                 android:id="@+id/imageViewBookCover"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/bookTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="제목"
-                android:textSize="20sp"
-                android:textColor="#000"
                 android:layout_below="@id/imageViewBookCover"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp"
+                android:text="제목"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:gravity="center_horizontal"/>
 
-            <TextView
-                android:id="@+id/Author"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/authorLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="작가: "
-                android:textSize="14sp"
-                android:textColor="#333"
                 android:layout_below="@id/bookTitle"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="16dp"/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Author1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="저자 : "
+                    android:textColor="#333"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/Author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/Author1"
+                    android:textColor="#333"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="30dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile"
+                android:layout_below = "@id/authorLayout"
+                app:shapeAppearanceOverlay="@style/Circular" />
 
             <TextView
                 android:id="@+id/Seller"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="판매자: "
-                android:textSize="14sp"
+                android:layout_marginTop="35dp"
+                android:layout_marginLeft="15dp"
+                android:layout_below="@id/authorLayout"
+                android:layout_toRightOf="@id/profileImage"
+                android:text="판매자 : "
                 android:textColor="#333"
-                android:layout_below="@id/Author"
-                android:layout_alignStart="@id/Author"
-                android:layout_marginTop="4dp"/>
+                android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/ISBN"
+                android:id="@+id/usernameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ISBN: "
-                android:textSize="14sp"
+                android:layout_marginTop="35dp"
+                android:layout_below="@id/authorLayout"
+                android:layout_toRightOf="@id/Seller"
                 android:textColor="#333"
-                android:layout_below="@id/Seller"
-                android:layout_alignStart="@id/Seller"
-                android:layout_marginTop="4dp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/Subscript"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/profileImage"
+                android:layout_marginTop="40dp"
                 android:text="상세 정보"
-                android:textSize="18sp"
                 android:textColor="#000"
-                android:layout_below="@id/ISBN"
-                android:layout_marginTop="16dp"/>
+                android:textSize="18sp" />
 
         </RelativeLayout>
     </ScrollView>
