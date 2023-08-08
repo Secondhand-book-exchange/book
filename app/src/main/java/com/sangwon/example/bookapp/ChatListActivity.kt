@@ -47,8 +47,6 @@ class ChatListActivity : AppCompatActivity() {
                         val chatRoomArray = documentSnapshot.get("ChatRoom") as ArrayList<String>?
 
                         if (!chatRoomArray.isNullOrEmpty()) {
-                            var loadedCount = 0
-
                             for (chatroom in chatRoomArray) {
                                 val uid = chatroom.substring(0, 28)
 
