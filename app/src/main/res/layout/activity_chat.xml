@@ -44,6 +44,10 @@
             android:layout_weight="15"
             android:textColor="@color/black"
             android:text="전송"
+            android:background="@drawable/send_button_background"
+
+
+
              />
     </LinearLayout>
 </RelativeLayout>
