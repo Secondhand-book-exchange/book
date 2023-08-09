@@ -34,6 +34,7 @@ class BookRegisterActivity : AppCompatActivity() {
     private var IsSale: Int = 1
     private lateinit var name: String
     private lateinit var Category: String
+    private lateinit var Price : String
 
 
     val user = auth.currentUser
@@ -72,6 +73,8 @@ class BookRegisterActivity : AppCompatActivity() {
             Location = binding.location.text.toString()
             BookStatus = binding.bookStatus.selectedItem.toString()
             Subscript = binding.Subscript.text.toString()
+            Price = binding.Price.text.toString()
+
             when {
                 BookTitle.replace(" ", "") == "" ->
                     Toast.makeText(this, "책 제목을 입력해 주세요.", Toast.LENGTH_SHORT).show()
@@ -161,7 +164,8 @@ class BookRegisterActivity : AppCompatActivity() {
                     Location,
                     timestamp,
                     Category,
-                    name
+                    name,
+                    Price
                 )
 
                 // 데이터베이스에 추가하는 코드는 여기에 작성하면 됩니다.

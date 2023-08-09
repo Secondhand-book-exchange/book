@@ -16,8 +16,8 @@ data class Posts(
     val Locate: String? = null,
     val timestamp: com.google.firebase.Timestamp? = null, //이 자료형 맞나?
     val Category: String? = null,
-
-    val name: String? = null
+    val name: String? = null,
+    val Price : String? = null
 
 )
 
@@ -30,6 +30,7 @@ data class BookItem(
     val Subscript: String,
     val Locate: String,
     val Category: String,
+    val Price: String,
     val type: Int,
     val name: String,
     val uid: String,

@@ -90,6 +90,7 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
                             Date = document.getTimestamp("timestamp")?.toDate() ?: Date(),
                             Locate = document.getString("locate") ?: "",
                             Category = document.getString("category") ?: "",
+                            Price = document.getString("price") ?: "",
                             type = document.getLong("isSale")!!.toInt(),
                             name = document.getString("name") ?: "",
                             uid = document.getString("uid") ?: ""
@@ -160,6 +161,7 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
         intent.putExtra("BookTitle", item.BookTitle)
         intent.putExtra("Author", item.Author)
         intent.putExtra("Subscript", item.Subscript)
+        intent.putExtra("Price", item.Price)
         intent.putExtra("uid", item.uid)
         intent.putExtra("name", item.name)
         val timestamp = Timestamp(item.Date).toString()

@@ -47,13 +47,6 @@
                 android:layout_marginTop="8dp"
                 android:hint="저자" />
 
-            <EditText
-                android:id="@+id/ISBN"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="ISBN" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,6 +103,14 @@
                 android:hint="내용"
                 android:gravity="top"
                 android:lines="4"/>
+
+            <EditText
+                android:id="@+id/Price"
+                android:layout_width="400px"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="가격" />
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
