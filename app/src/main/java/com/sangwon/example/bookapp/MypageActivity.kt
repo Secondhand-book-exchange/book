@@ -3,16 +3,18 @@ package com.sangwon.example.bookapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.sangwon.example.bookapp.databinding.ActivityMypageBinding
 
 class MyPageActivity : AppCompatActivity() {
@@ -56,6 +58,10 @@ class MyPageActivity : AppCompatActivity() {
             logout()
         }
 
+        binding.signOutButton.setOnClickListener {
+            signOut()
+        }
+
         binding.purchaseHistoryButton.setOnClickListener {
             val intent = Intent(this, BookListActivity::class.java)
             intent.putExtra("type", "purchase")
@@ -88,16 +94,19 @@ class MyPageActivity : AppCompatActivity() {
                             it.phoneNumber.replace("({3}-{3,4}-{4})", "$1-$2-$3")
                         profileImageUrl = "profile_images/${auth.currentUser!!.uid}"
 
-                        val storageReference = FirebaseStorage.getInstance().reference.child(profileImageUrl)
+                        val storageReference =
+                            FirebaseStorage.getInstance().reference.child(profileImageUrl)
 
                         storageReference.downloadUrl.addOnCompleteListener { task ->
-                            profileImageUrl = task.result.toString()
-                            Glide.with(this)
-                                .load(task.result)
-                                .into(binding.profileImage)
-                        }.addOnFailureListener {
-                            binding.profileImage.setBackgroundResource(R.drawable.profile)
-                            profileImageUrl = ""
+                            if (task.isSuccessful) {
+                                profileImageUrl = task.result.toString()
+                                Glide.with(this)
+                                    .load(task.result)
+                                    .into(binding.profileImage)
+                            } else {
+                                binding.profileImage.setBackgroundResource(R.drawable.profile)
+                                profileImageUrl = ""
+                            }
                         }
                     }
                 } else {
@@ -111,13 +120,63 @@ class MyPageActivity : AppCompatActivity() {
 
     private fun logout() {
         auth.signOut() // Firebase 로그아웃
-        GoogleSignIn.getClient(this, GoogleSignInOptions.Builder().build()).revokeAccess()
 
         // LoginActivity로 이동
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
         finish()
+    }
+
+    private fun signOut() {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle("계정을 삭제합니다")
+            .setMessage("정말로 계정을 삭제하시겠습니까?")
+            .setPositiveButton("삭제") { _, _ ->
+                val db = FirebaseFirestore.getInstance()
+                db.collection("users").document(auth.currentUser!!.uid)
+                    .get()
+                    .addOnSuccessListener {
+                        db.collection("users").document(auth.currentUser!!.uid)
+                            .delete()
+                            .addOnSuccessListener {
+                                val storage = FirebaseStorage.getInstance()
+                                storage.reference.child("profile_images").child(auth.currentUser!!.uid)
+                                    .delete()
+                                    .addOnSuccessListener {
+                                        db.collection("post")
+                                            .whereEqualTo("uid", auth.currentUser!!.uid)
+                                            .get()
+                                            .addOnSuccessListener {
+                                                for (doc in it.documents) {
+                                                    db.collection("Post").document(doc.id).delete()
+                                                }
+                                            }
+                                    }
+                            }
+                        for (chat in it.get("ChatRoom") as ArrayList<String>){
+                            db.collection("users").whereArrayContains("ChatRoom", chat)
+                                .get()
+                                .addOnSuccessListener {partners ->
+                                    for (i in partners){
+                                        db.collection("users").document(i.id)
+                                            .update("ChatRoom", FieldValue.arrayRemove(chat))
+                                    }
+                                }
+                            db.collection("Chats").document(chat).delete()
+                        }
+                    }
+
+            }
+            .setNegativeButton("취소") { _, _ -> }
+        dialog.show()
+
+//        auth.currentUser?.delete()
+//        Toast.makeText(this, "계정이 삭제됐습니다.", Toast.LENGTH_SHORT).show()
+//        val intent = Intent(this, LoginActivity::class.java)
+//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//        startActivity(intent)
+//        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

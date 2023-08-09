@@ -68,17 +68,19 @@ class ChatActivity : AppCompatActivity() {
         val chatRoomInfoInit = ChatingRoomInfo(true, Timestamp.now().toString())
         //ChatingRoomInfo 초기화:양쪽 방의 상태를 초기화
         db.collection("Chats").document(senderUid!!)
-            .collection("${senderRoom}").document("ChatingRoomInfo").get()
+            .collection(senderRoom).document("ChatingRoomInfo").get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val documentSnapshot = task.result
                     if (!documentSnapshot.exists()) {
                         // ChatingRoomInfo 문서가 존재하지 않는 경우 초기화
                         db.collection("Chats").document(senderUid!!)
-                            .collection("${senderRoom}").document("ChatingRoomInfo").set(chatRoomInfoInit)
+                            .collection(senderRoom)
+                            .document("ChatingRoomInfo")
+                            .set(chatRoomInfoInit)
                             .addOnSuccessListener {
                                 db.collection("Chats").document(receiverUid!!)
-                                    .collection("${receiverRoom}").document("ChatingRoomInfo").set(chatRoomInfoInit)
+                                    .collection(receiverRoom).document("ChatingRoomInfo").set(chatRoomInfoInit)
                             }
                     }
                 } else {
@@ -153,6 +155,4 @@ class ChatActivity : AppCompatActivity() {
     private fun scrollRecyclerViewToBottom() {
         binding.chatRecyclerView.scrollToPosition(messageList.size - 1)
     }
-
-
 }
