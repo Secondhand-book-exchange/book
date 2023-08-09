@@ -52,6 +52,7 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
             val chatButton = findViewById<FloatingActionButton>(R.id.chat)
             chatButton.visibility = View.GONE // 또는 View.GONE
             binding.salefinish.visibility = View.VISIBLE
+            binding.bookfinish.visibility = View.VISIBLE
         }
 
         binding.salefinish.setOnClickListener {
@@ -76,6 +77,21 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
                                     Log.e("did","0")
                                 }
                         }
+                    }
+                }
+        }
+        binding.bookfinish.setOnClickListener {
+            val timestamp = intent.getStringExtra("timestamp")
+            lateinit var documentId: String
+            val postRef = db.collection("Posts")
+                .addSnapshotListener { value, error ->
+                    for (document in value!!.documents) {
+                        if (document.get("timestamp").toString() == timestamp) {
+                            documentId = document.id
+                            db.collection("Posts").document(documentId).delete()
+                            finish()
+                        }
+
                     }
                 }
         }
