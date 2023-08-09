@@ -17,7 +17,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var list: BookListFragment
 
     private lateinit var searchRecord: SharedPreferences
-    private lateinit var searchAdapter:SearchAdapter
+    private lateinit var searchAdapter: SearchAdapter
     private var recordSet = mutableSetOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,10 +26,10 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         searchRecord = getSharedPreferences("searchRecord", Context.MODE_PRIVATE)
-        recordSet = searchRecord.getStringSet("record", setOf<String>()) ?: mutableSetOf()
+        recordSet = searchRecord.getStringSet("record", mutableSetOf<String>()) ?: mutableSetOf()
 
         searchAdapter = SearchAdapter()
-        for (keyword in recordSet){
+        for (keyword in recordSet) {
             searchAdapter.add(keyword)
         }
         binding.searchRecord.adapter = searchAdapter
@@ -45,7 +45,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
             if (hasFocus) {
                 binding.searchRecord.isGone = false
                 binding.list.isGone = true
-            }else{
+            } else {
                 binding.list.isGone = false
                 binding.searchRecord.isGone = true
             }
@@ -59,8 +59,6 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
             true
         }
         binding.searchBtn.setOnClickListener(this)
-
-
     }
 
     override fun onClick(v: View?) {
