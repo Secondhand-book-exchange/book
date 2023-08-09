@@ -40,7 +40,9 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
         binding.Author.text = intent.getStringExtra("Author")
         binding.Subscript.text = intent.getStringExtra("Subscript")
 
-        val uid = auth.currentUser?.uid
+        binding.Price.text = "가격 : " + intent.getStringExtra("Price")
+        if(intent.getStringExtra(("Price")) == "")
+            binding.Price.text = "가격 : 미정"
 
         //자기가 올린 게시물이라면 판매 종료 버튼 등장
         if(uid == intent.getStringExtra("uid"))
@@ -82,6 +84,14 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
             Glide.with(this)
                 .load(Uri.parse(uri))
                 .into(binding.imageViewBookCover)
+
+            Glide.with(this)
+                .load(Uri.parse(uri))
+                .into(binding.imageViewBookCoverPre)
+
+            Glide.with(this)
+                .load(Uri.parse(uri))
+                .into(binding.imageViewBookCoverNext)
         }
 
         val currentUser = auth.currentUser
