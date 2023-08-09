@@ -48,6 +48,7 @@ class BookListFragment(private val key: String = "") : Fragment(), AdapterView.O
 
         // Set the adapter
         if (view is ListView) {
+            view.dividerHeight = 30
             view.adapter = adapter
             view.onItemClickListener = this
             callBookList(view)

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.sangwon.example.bookapp.BookItem
@@ -53,8 +54,8 @@ class BookListAdapter : BaseAdapter() {
         if (items[position].type()) {
             type.text = "거래 완료"
             type.setTextColor(Color.RED)
-            view.setBackgroundColor(Color.parseColor("#DDDDDD"))
-            iconImageView.alpha=0.6f
+            view.findViewById<RelativeLayout>(R.id.saled).setBackgroundColor(Color.parseColor("#000000"))
+            view.findViewById<RelativeLayout>(R.id.saled).alpha = 0.2f
         } else {
             type.text = "판매중"
             type.setTextColor(Color.parseColor("#157000"))
