@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -149,6 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/Subscript1"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="150dp"
                 android:text="상세 정보"
                 android:textColor="#000"
                 android:textSize="18sp" />
@@ -170,6 +172,7 @@
 
     </ScrollView>
 
+
     <Button
         android:id="@+id/salefinish"
         android:layout_width="match_parent"
@@ -178,9 +181,24 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:text="판매 종료">
+        android:text="판매 완료" />
 
-    </Button>
+    <Button
+        android:id="@+id/bookfinish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30px"
+        android:layout_above="@id/salefinish"
+        android:layout_below="@id/Subscript"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:text="게시물 삭제"
+        tools:ignore="NotSibling" />
+
+
+
+
+
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
