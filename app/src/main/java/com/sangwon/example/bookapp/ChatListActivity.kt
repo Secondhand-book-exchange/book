@@ -120,6 +120,9 @@ class ChatListActivity : AppCompatActivity() {
             val senderRoom = receiverUid + senderUid
             val receiverRoom = senderUid + receiverUid
 
+            if(chatItem.timestamp == "0") {
+                return@setOnItemClickListener
+            }
             chatItem.check = false
 
             //클릭 시 양쪽의 ChatingRoomInfo에 접근하여 check를 false로 바꾸기 아니지 한쪽만 해야지
