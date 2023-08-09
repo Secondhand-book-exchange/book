@@ -44,6 +44,8 @@ class BookInfoActivity : AppCompatActivity(), View.OnClickListener {
         if(intent.getStringExtra(("Price")) == "")
             binding.Price.text = "가격 : 미정"
 
+
+        val uid = auth.currentUser?.uid
         //자기가 올린 게시물이라면 판매 종료 버튼 등장
         if(uid == intent.getStringExtra("uid"))
         {
