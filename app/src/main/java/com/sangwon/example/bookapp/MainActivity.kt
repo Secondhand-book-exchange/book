@@ -47,13 +47,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         setCategoryRecyclerView()
         loadUserInfo()
         permissionNotification()
-        Intent(this, MessageNotificationService::class.java).also {intent ->
-            startService(intent)
-        }
     }
 
     override fun onResume() {
         super.onResume()
+        Intent(this, MessageNotificationService::class.java).also {intent ->
+            startService(intent)
+        }
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.list, BookListFragment())
             .commitAllowingStateLoss()

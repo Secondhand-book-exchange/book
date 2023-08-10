@@ -30,8 +30,8 @@ class MessageNotificationService : Service() {
     private fun onHandleIntent() {
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance().currentUser
-        db.collection("users").document(auth?.uid.toString()).get().addOnSuccessListener { user ->
-            val chatRoomArray = user.get("ChatRoom") as ArrayList<String>?
+        db.collection("users").document(auth?.uid.toString()).addSnapshotListener { user, e ->
+            val chatRoomArray = user?.get("ChatRoom") as ArrayList<String>?
 
             if (!chatRoomArray.isNullOrEmpty()) {
                 val chatRoomMap = HashMap<String, String>()
