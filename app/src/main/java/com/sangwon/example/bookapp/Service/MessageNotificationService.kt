@@ -1,26 +1,33 @@
 package com.sangwon.example.bookapp.Service
 
-import android.app.IntentService
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Intent
 import android.graphics.Color
+import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.sangwon.example.bookapp.ChatListActivity
-import com.sangwon.example.bookapp.MainActivity
 import com.sangwon.example.bookapp.R
 
-class MessageNotificationService : IntentService(MessageNotificationService::class.simpleName) {
-    private lateinit var messageListener: ListenerRegistration
+class MessageNotificationService : Service() {
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        onHandleIntent()
+        return START_STICKY
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+    private fun onHandleIntent() {
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance().currentUser
         db.collection("users").document(auth?.uid.toString()).get().addOnSuccessListener { user ->
@@ -28,16 +35,24 @@ class MessageNotificationService : IntentService(MessageNotificationService::cla
 
             if (!chatRoomArray.isNullOrEmpty()) {
                 val chatRoomMap = HashMap<String, String>()
-                for (senderRoom in chatRoomArray) {
+                for (senderRoom in chatRoomArray)
                     db.collection("Chats").document(auth?.uid.toString())
                         .collection(senderRoom)
                         .orderBy("timestamp", Query.Direction.DESCENDING)
-                        .addSnapshotListener { snapshot, e ->
+                        .get()
+                        .addOnSuccessListener { snapshot->
                             if (snapshot != null && !snapshot.isEmpty)
-                                chatRoomMap[senderRoom] =
-                                    snapshot.documents[0].getString("message") ?: ""
+                                for (document in snapshot.documents) {
+                                    val message = document.getString("message")
+                                    Log.e("FIRSTMESSAGE" ,message.toString())
+                                    if (message != null && document.getString("sendId") != auth?.uid) {
+                                        chatRoomMap[senderRoom] = message
+                                        break
+                                    }
+                                }
                         }
-                }
+
+                Thread.sleep(1000)
 
                 for (senderRoom in chatRoomArray)
                     db.collection("Chats").document(auth?.uid.toString())
@@ -50,16 +65,17 @@ class MessageNotificationService : IntentService(MessageNotificationService::cla
                                 for (document in snapshot.documents) {
                                     if (document.getString("sendId") != auth?.uid) {
                                         val message = document.getString("message")
-                                        if (message != null) {
+                                        if (message != null && message != chatRoomMap[senderRoom]) {
                                             notice(
                                                 senderRoom,
                                                 document.getString("sendId")!!,
                                                 message
                                             )
+                                            Log.e("qqqqqqqqq","${chatRoomMap[senderRoom]} $message")
                                             chatRoomMap[senderRoom] = message
                                         }
-                                        break
                                     }
+                                    break
                                 }
                             }
                         }
@@ -67,9 +83,6 @@ class MessageNotificationService : IntentService(MessageNotificationService::cla
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
-    }
 
     private fun notice(channelId: String, channelName: String, message: String) {
 // NotificationManager 객체 생성
@@ -118,7 +131,7 @@ class MessageNotificationService : IntentService(MessageNotificationService::cla
         notificationManager.notify(0, notificationCompatBuilder.build())
     }
 
-    fun stackChatLog(message: String, sender:String){
+    private fun stackChatLog(message: String, sender:String){
 
     }
 }
