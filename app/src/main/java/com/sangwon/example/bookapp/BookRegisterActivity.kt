@@ -112,7 +112,11 @@ class BookRegisterActivity : AppCompatActivity() {
             rg.addView(rbtn)
         }
         rg.setOnCheckedChangeListener { _, id ->
-            Category = resources.getStringArray(R.array.category)[id - 1]
+            val radioButton = findViewById<RadioButton>(id)
+            val index = rg.indexOfChild(radioButton)
+            if (index >= 0 && index < resources.getStringArray(R.array.category).size) {
+                Category = resources.getStringArray(R.array.category)[index]
+            }
         }
     }
 
