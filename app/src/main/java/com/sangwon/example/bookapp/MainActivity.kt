@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            binding.profileImage.id -> startActivity(Intent(this, MyPageActivity::class.java))
+            binding.profileImage.id -> {startActivity(Intent(this, MyPageActivity::class.java));finish()}
             binding.themesBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
             binding.bookBtn.id -> startActivity(Intent(this, BookListActivity::class.java))
             binding.menuBtn.id -> {}

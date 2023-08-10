@@ -7,21 +7,20 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.sangwon.example.bookapp.ChatListActivity
 import com.sangwon.example.bookapp.MainActivity
+import com.sangwon.example.bookapp.R
 
 class MessageNotificationService : IntentService(MessageNotificationService::class.simpleName) {
     private lateinit var messageListener: ListenerRegistration
 
     override fun onHandleIntent(intent: Intent?) {
-        notice("hi", "bye")
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance().currentUser
         db.collection("users").document(auth?.uid.toString()).get().addOnSuccessListener { user ->
@@ -40,38 +39,43 @@ class MessageNotificationService : IntentService(MessageNotificationService::cla
                         }
                 }
 
-                while (false) {
-                    Thread.sleep(1000)
-
-                    for (senderRoom in chatRoomArray)
-                        messageListener = db.collection("Chats").document(auth?.uid.toString())
-                            .collection(senderRoom)
-                            .orderBy("timestamp", Query.Direction.DESCENDING)
-                            .addSnapshotListener { snapshot, e ->
-                                if (snapshot != null && !snapshot.isEmpty) {
-                                    val msg = snapshot.documents[0].getString("message") ?: ""
-                                    if (msg != chatRoomMap[senderRoom]) {
-                                        notice(senderRoom, msg)
-                                        chatRoomMap[senderRoom] = msg
+                for (senderRoom in chatRoomArray)
+                    db.collection("Chats").document(auth?.uid.toString())
+                        .collection(senderRoom)
+                        .orderBy("timestamp", Query.Direction.DESCENDING)
+                        .addSnapshotListener { snapshot, e ->
+                            if (e != null) {
+                                Log.e("MessageError", e.message.toString())
+                            } else if (snapshot != null && !snapshot.isEmpty) {
+                                for (document in snapshot.documents) {
+                                    if (document.getString("sendId") != auth?.uid) {
+                                        val message = document.getString("message")
+                                        if (message != null) {
+                                            notice(
+                                                senderRoom,
+                                                document.getString("sendId")!!,
+                                                message
+                                            )
+                                            chatRoomMap[senderRoom] = message
+                                        }
+                                        break
                                     }
                                 }
                             }
-                }
+                        }
             }
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun notice(channelId:String, message:String) {
+    private fun notice(channelId: String, channelName: String, message: String) {
 // NotificationManager 객체 생성
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         // Notification Channel 아이디, 이름, 설명, 중요도 설정
-        val channelName = "첫 번째 채널"
         val channelDescription = "첫 번째 채널에 대한 설명입니다."
         val importance = NotificationManager.IMPORTANCE_DEFAULT
 
@@ -90,17 +94,17 @@ class MessageNotificationService : IntentService(MessageNotificationService::cla
 
         val notificationCompatBuilder = NotificationCompat.Builder(this, channelId)
 
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, ChatListActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
         notificationCompatBuilder.let {
             // 작은 아이콘 설정
-            it.setSmallIcon(android.R.drawable.arrow_up_float)
+            it.setSmallIcon(R.mipmap.ic_launcher)
             // 시간 설정
             it.setWhen(System.currentTimeMillis())
             // 알림 메시지 설정
-            it.setContentTitle("문자 왓숑")
+            it.setContentTitle("채팅 왓숑")
             // 알림 내용 설정
             it.setContentText(message)
 
@@ -112,5 +116,9 @@ class MessageNotificationService : IntentService(MessageNotificationService::cla
         }
 
         notificationManager.notify(0, notificationCompatBuilder.build())
+    }
+
+    fun stackChatLog(message: String, sender:String){
+
     }
 }
