@@ -1,12 +1,15 @@
 package com.sangwon.example.bookapp
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
@@ -16,6 +19,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.bookapp.Adapter.ThemeAdapter
+import com.sangwon.example.bookapp.Service.MessageNotificationService
 import com.sangwon.example.bookapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnItemClickListener,
@@ -42,6 +46,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
         setListener()
         setCategoryRecyclerView()
         loadUserInfo()
+        permissionNotification()
+        Intent(this, MessageNotificationService::class.java).also {intent ->
+            startService(intent)
+        }
     }
 
     override fun onResume() {
@@ -173,5 +181,34 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ThemeAdapter.OnI
             .replace(R.id.list, BookListFragment())
             .commitAllowingStateLoss()
         binding.swipe.isRefreshing = false
+    }
+
+    fun permissionNotification(){
+        val requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    // Permission is granted. Continue the action or workflow in your
+                    // app.
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // feature requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their
+                    // decision.
+                }
+            }
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+            -> {
+                // You can use the API that requires the permission.
+            }
+            else -> {
+                // You can directly ask for the permission.
+                // The registered ActivityResultCallback gets the result of this request.
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 }
