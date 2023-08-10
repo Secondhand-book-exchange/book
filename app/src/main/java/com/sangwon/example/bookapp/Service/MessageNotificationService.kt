@@ -63,16 +63,21 @@ class MessageNotificationService : Service() {
                                 Log.e("MessageError", e.message.toString())
                             } else if (snapshot != null && !snapshot.isEmpty) {
                                 for (document in snapshot.documents) {
-                                    if (document.getString("sendId") != auth?.uid) {
+                                    val id = document.getString("sendId")
+                                    if (id != auth?.uid) {
                                         val message = document.getString("message")
                                         if (message != null && message != chatRoomMap[senderRoom]) {
-                                            notice(
-                                                senderRoom,
-                                                document.getString("sendId")!!,
-                                                message
-                                            )
-                                            Log.e("qqqqqqqqq","${chatRoomMap[senderRoom]} $message")
-                                            chatRoomMap[senderRoom] = message
+                                            db.collection("users").document(id!!).get().addOnSuccessListener {
+                                                val name = it.getString("name")?:"알 수 없음"
+                                                notice(
+                                                    senderRoom,
+                                                    name,
+                                                    message
+                                                )
+                                                stackChatLog(message, name)
+                                                Log.e("qqqqqqqqq","${chatRoomMap[senderRoom]} $message")
+                                                chatRoomMap[senderRoom] = message
+                                            }
                                         }
                                     }
                                     break
@@ -132,6 +137,7 @@ class MessageNotificationService : Service() {
     }
 
     private fun stackChatLog(message: String, sender:String){
+        val log = "${sender}님이 \"$message\"라고 메시지를 보냈습니다."
 
     }
 }

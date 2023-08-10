@@ -44,6 +44,19 @@ class SearchAdapter : BaseAdapter() {
     }
 
     fun add(areas: String) {
-        items.add(areas)
+        if (areas != "")
+            if (!items.contains(areas))
+                items.add(areas)
+    }
+
+    fun delete(id:Int){
+        items.removeAt(id)
+    }
+
+    fun getSearchSet(): String {
+        var searches = ""
+        for(word in items)
+            searches += "$word{"
+        return searches
     }
 }
