@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">bookapp</string>
+    <string name="app_name">B마켓</string>
     <string-array name="book_status_options">
         <item>좋음</item>
         <item>보통</item>
