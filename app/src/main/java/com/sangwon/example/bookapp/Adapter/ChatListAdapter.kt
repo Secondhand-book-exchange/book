@@ -53,7 +53,12 @@ class ChatListAdapter : BaseAdapter() {
             check.setBackgroundColor(Color.WHITE)
         }
 
-        return view
+
+        if (items[position].name == "") {
+            view.findViewById<TextView>(R.id.name).text = "(알 수 없음)"
+        }
+
+             return view
     }
 
     fun addChat(item: Chat) {
